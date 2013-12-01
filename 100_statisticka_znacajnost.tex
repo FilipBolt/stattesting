@@ -1,0 +1,59 @@
+\citep{thompson1993use} navodi neke kritike konvencionalnih metoda statističkog testiranja:
+
+1. Nulta hipoteza će se \textbf{uvijek} odbaciti ako uzme u obzir dovoljno velika populacija. To je potkrepljeno citatom:
+	
+\begin{quote}
+Ispitivanje statističke značajnosti može biti vođeno tautologijom. Umorni istraživači, nakon prikupljanja skupa podataka, rade statističke testove kako bi se uvjerili da je prikupljena dovoljno velika količina podataka, što je podatak koji već znaju. Ovakva tautologija učinila je mnogo štete znanstvenoj zajednici.
+\end{quote}
+
+2. Korištenje ANOVE može dovesti do pogrešnih usporedbi. U višedimenzionalnim analizama primjenom hijerarhijskog pristupa moguće je povlačiti usporedbe između podataka iz različitih dimenzija, analogno poslovici: usporedba krušaka i jabuka. 
+
+3. Oslanjanje na ispitivanje statističke značajnosti stvara neizbježne dvojbe. \\  ANOVA zahtjeva spajanje varijanci prilikom izračuna srednje devijacije (u nazivniku). Ova operacija je dozvoljena samo u slučaju da su varijable homogene. Slično tome, ANCOVA (analiza kovarijance) pretpostavlja da je zadovoljen uvjet \textit{homogenosti regresije}.
+
+
+Bruce Thompson smatra kako ne treba odbaciti ispitivanje statističke značajnosti, već se treba koristiti u prave (skromnije no sada) svrhe. 
+
+\section{Testiranje hipoteze}
+
+Dobiveni sustav \emph{A} uspoređuje se s osnovnim \engl{baseline} sustavom \emph{B}. Usporedba se radi s nekim dostupnim skupom podataka \engl{dataset} - populacijom. Uzimanjem uzorka $x$ iz populacije i usporedbom performansi sustava \emph{A} i \emph{B} nad izabranim uzorkom dobiva se mjera razlike u performansama sustava $\delta(x)$. Testiranjem hipoteze ograđuje se da su dobiveni rezultati slučajnost. Cilj je pokazati kako uzimanjem uzorka $x^{'}$ rezultati (razlike u performansama) će i dalje biti \emph{slični}. Na ovaj način oblikuje se \emph{nulta hipoteza}. Nultom hipotezom pretpostavlja se upravo suprotno: ne postoji razlika u performansama između sustava \textit{A} i \textit{B}. Nulta hipoteza označava se sa $H_0$. 
+
+Testiranje hipoteze procjenjuje kolika je to vjerojatnost:
+\begin{equation}
+\label{eq:vjerojatnost_nulte_hipoteze}
+p(\delta(X) > \delta(x) | H_{0}) < \alpha
+\end{equation}
+gdje je \textit{X} slučajna varijabla mogućih dobivenih uzoraka veličine \textit{n}, a $\delta(x)$ promatrana (konstantna) vrijednost. Ako vrijedi \ref{eq:vjerojatnost_nulte_hipoteze} za $\alpha=0.05$ onda se odbacuje nulta hipoteza, jer je 
+\ref{eq:vjerojatnost_nulte_hipoteze} naziva se \textit{p-vrijednost}, odnosno empirijska razina značajnosti. 
+
+P-vrijednost se često aproksimira, jer je u nekim slučajevima nije moguće jednostavno izračunati. Jedna od najčešće korištenih metoda za procjenjivanje p-vrijednosti je upareni \engl{bootstrap}. Upareni bootstrap jedna je od najčešće korištenih metoda \citep{koehn2004statistical} zato što se može primjeniti na sve mjerne metode (uključujući složenije kao što su BLEU \citep{papineni2002bleu}, F1). 
+
+%TODO napisati za ostale metode osim uparenog bootstrapa
+
+\subsection{Bootstrap}
+
+Bootstrap procjenjuje \textit{p-vrijednost}, vadi testne uzorke $x_i$ iz populacije i broji koliko često sustav \emph{A} funkcionira s performansama $\delta(x)$ (ili većim) od sustava \textit{B}. Na raspolaganju stoji samo populacija $x$, pa se podaci iz $x$ uzorkuju sa zamjenom \engl{sampling with replacement}. Tako dobiveni uzorci nazivaju se \engl{bootstrap} uzorcima. 
+
+Za dobivene uzorke $x_i$ bi, prema nultoj hipotezi, trebalo vrijediti da 
+\begin{equation}
+\label{eq:jednakost_delta}
+\frac{1}{k}\sum_{i=0}^{k}\delta(x_i) = \delta(x)
+\end{equation}
+
+gdje je \textit{k} broj uzoraka. Ako se želi provjeriti može li se odbaciti nulta hipoteza, potrebno je provjeriti \textit{koliko često sustav A daje rezultate koji su bolji od očekivanih}. Očekivani rezultat je da je sustav \textit{A} bolji od sustava \textit{B} za $\delta(x)$. Prema tome, prebrojava se u koliko slučajeva test skupova podataka $x_i$ je \textit{A} bio bolji od \textit{B} za $2\delta(x)$. Pseudokod bootstrap postupka je prikazan je \citep{berg2012empirical} bootstrap postupka prikazan je \ref{code:bootstrapkod}.
+
+\begin{algorithm}
+\caption{Pseudokod bootstrap postupka}\label{code:bootstrapkod}
+\begin{algorithmic}[1]
+\State Generiranje $b$ bootstrap uzoraka $x_i$ veličine $n$ nasumičnim izborom s ponavljanjem iz populacije $x$
+\State $s=0$
+\Repeat 
+\If{$\delta(x_i)>2\delta(x)$}
+\State $s=s+1$
+\EndIf
+\Until{$i>n$}
+\State $p=\frac{s}{b}$
+\end{algorithmic}
+\end{algorithm}
+
+Najveća prednost bootstrap metode je mogućnost računanja $\delta(x)$ za bilo koju metriku. 
+
