@@ -1,0 +1,23 @@
+Testiranje hipoteza dominantan je način verifikacije rezultata prilikom objavljivanja znanstvenih radova. Ronald Fisher, otac moderne statistike, pokazao je kako je moguće rezultate eksperimenta dokazati ili opovrgnuti koristeći statističke postupke \citep{fisher1922mathematical}. Prema Fisherovom testiranju hipoteza moguće je ispitati jesu li rezultati dobiveni eksperimentom statistički značajni ili nisu. Razvojem statistike utemeljen je uobičajen način ispitivanja statističke značajnosti prema kojem se:
+
+\begin{enumerate}
+\item postavlja inicijalna hipoteza istraživanja,
+\item definira nulta $H_0$ i alternativna hipoteza $H_1$ (engl.\,\textit{null and alternative hypothesis}),
+\item promatraju statistička obilježja podataka nad kojima će se provoditi odgovarajući statistički testovi (engl.\,\textit{statistical tests}),
+\item na temelju rezultata prethodnog koraka odabire odgovarajući statistički test,
+\item odabire relevantna statistička mjera $T$ (engl.\,\textit{test statistic}),
+\item računa distribucija odabrane statističke mjere $T$ pod pretpostavkom da je nulta hipoteza zadovoljena (ove vrijednosti često su unaprijed izračunate i pohranjene u tablicama \citep{wilcoxon1973critical})
+\item odabire razina značajnosti $\alpha$ (engl.\,\textit{significance level}), razina vjerojatnosti ispod koje se odbacuje nulta hipoteza (česti odabiri su 1\% ili 5\%, ovisno o eksperimentu),
+\item računaju granične vrijednosti (engl.\,\textit{critical region}) distribucije statističke mjere $T$ za razinu značajnosti $\alpha$,
+\item računa statistička mjera $t_{obs}$ dobivena iz eksperimentalnih (stvarnih) podataka,
+\item donosi odluka o odbacivanju nulte hipoteze ukoliko je dobivena vrijednost $t_{obs}$ unutar graničnih vrijednosti.
+\end{enumerate}
+
+Moguć je i alternativan scenarij prema kojem se na temelju dobivene $t_{obs}$ vrijednosti računa $p$ vrijednost (engl.\,\textit{p-value}), vjerojatnost eksperimentalnih podataka pod pretpostavkom nulte hipoteze donosi odluka o odbacivanju nulte hipoteze. 
+
+Eksperiment kojim je Fisher predstavio testiranje hipotezi je damin test kušanja čaja (engl.\,\textit{lady tasting tea}). Testom se pokušalo ustanoviti može li dama (u Fisherovom slučaju Muriel Bristol) temeljem okusa razlikovati čaj s mlijekom prema načinu spravljanja napitka (prvo čaj, zatim mlijeko ili obratno). U ovom slučaju nulta hipoteza je pretpostavka da dama ne može razlikovati čaj s mlijekom sudeći samo prema okusu. Dami je predstavljeno osam šalica čaja s mlijekom za koje je morala opisati način pripreme. Dobiveni rezultati uspoređuju se s pravim vrijednostima, te se na temelju toga provodi statistička verifikacija rezultata. Eksperiment je detaljno objašnjen u Fisherovom radu \cite{fisher1935design}. Test se smatra izuzetno bitnim za razvoj polja statistike \citep{potter2001lady}.
+
+Interpretacija rezultata statističkog testiranja često se provodi kroz izračunatu $p$-vrijednost. Na temelju $p$-vrijednosti, vjerojatnosti $P(H_0|D)$ dobivenih podataka $D$ pod pretpostavkom nulte hipoteze $H_0$ , donosi se odluka o prihvaćanju ili odbacivanju nulte hipoteze. U slučaju kada je $p$-vrijednost manja od postavljene razine statističke značajnosti $\alpha$, nije moguće odbaciti nultu hipotezu zbog nedovoljno dokaza. \textit{P-vrijednost} naziva se i empirijska razina značajnosti.
+
+Testiranje hipoteza primjenjuje se u gotovo svim znanstvenim disciplinama. Nažalost, postupak dokazivanja statističke značajnosti izuzetno je kontroverzno i podložno brojnim kritikama. Objavljen je izuzetno velik broj radova koji kritiziraju provedbe sumnjivih statističkih postupaka, kao što su \citep{hedges1985statistical}, \citep{dar1994misuse}, \citep{yoccoz1991use}. Najprodavanija knjiga iz statistike \textit{How to lie with statistics} \citep{huff2010lie} pokušava na način pristupačan široj publici pokazati na koji je način moguće slučajno ili namjerno iskoristiti statistiku na pogrešan način. Razlozi pogrešnog provođenja statističkog testa su pogrešno tumačenje ili preskakanje jednog od koraka navedenih na početku poglavlja.
+

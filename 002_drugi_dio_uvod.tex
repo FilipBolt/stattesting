@@ -1,0 +1,90 @@
+Ispitivanje statističke značajnosti rezultata često se obavlja u kontekstu strojnog učenja. Izrada novih tehnika i metoda strojnog učenja zahtjeva dokaz i statističku analizu o performansama sustava. 
+
+\begin{table}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|}
+\hline
+Riječ & lopata & život & ja & ljudi & cvijet & ili & svijet & klasifikacija & ritam & latica \\ \hline
+Ispravno & T & F & F & T & F & F & T & T & T & F \\ \hline
+Dobiveno & T & T & T & F & F & F & T & T & T & T \\ \hline
+\end{tabular}
+\caption{Rezultat klasifikatora}
+\label{tab:usporedba_predict_gold}
+\end{table}
+
+\section{Mjerenje performansi modela strojnog učenja}
+
+Primjerice, radi se na automatskom prepoznavanju ključnih riječi u tekstu pomoću modela baziranom na strojnom učenju, klasifikatoru. Konačan cilj istraživanja je usporedba i verifikacija performansi dva klasifikatora ključnih riječi, kako bi se pronašao optimalan klasifikacijski sustav. Ulaz klasifikatoru je dokument, a izlaz klasifikatora mora biti niz ključnih riječi. Postoje referentne vrijednosti (engl.\,\textit{gold standard}), koje se smatraju ispravnim ključnim riječima pojedinog dokumenta s kojima se uspoređuje rezultat dobiven klasifikatorom. U tablici \ref{tab:usporedba_predict_gold} dan je primjer ispitivanja rezultata klasifikatora. U prvom stupcu je popis riječi nad kojima se provodi klasifikacija, u drugom stupcu označena je (\textit{T} je točno, \textit{N} netočno) ispravna oznaka riječi, tj. je li neka riječ ključna (\textit{T}) ili nije (\textit{F}). Treći stupac predstavlja izlaz klasifikatora za riječ u odgovarajućem retku. Iz navedene tablice možemo vidjeti kako su moguće četiri kombinacije podudaranja izlaza klasifikatora i stvarne vrijednosti. 
+
+Popisivanje svih rezultata može biti nepregledno, pogotovo kod većeg broja testnih primjera, stoga se koriste tablice kontigencije \engl{contigency tables}. Njima se dobivaju agregirane vrijednosti ispitivanja klasifikatora, a daju pregled koliko ima 
+\begin{itemize}
+\item ispravno klasificiranih pozitivnih primjera (engl.\,\textit{true positives}) --TP, \item ispravno klasificiranih negativnih primjera (engl.\,\textit{true negatives}) -- TN,
+\item pozitivnih primjera pogrešno svrstanih u negativne (engl.\,\textit{false positives}) -- FP i 
+\item negativnih primjera pogrešno svrstanih u pozitivne (engl.\,\textit{false negatives}) -- FN.
+\end{itemize} Upravo su ovo sve četiri moguće kombinacije ispitivanja rezultata klasifikatora. Općenit oblik tablice kontigencije prikazan je na tablici \ref{tab:contigency}. Tablicu kontigencije za primjer iz tablice \ref{tab:usporedba_predict_gold} moguće je vidjeti u tablici \ref{tab:contigency_example}. Ovakav oblik tablica kontigencija često se koristi u strojnom učenju, kao u radu \cite{hall1999correlation}.
+
+\begin{table}
+\parbox{.45\linewidth}{
+
+\centering
+\begin{tabular}{cc|c|c|}
+\cline{3-4}
+& & \multicolumn{2}{ c| }{Ispravno} \\ 
+\cline{3-4} & & T & F  \\ 
+\cline{1-4} \multicolumn{1}{ |c| }{\multirow{2}{*}{Dobiveno} } & \multicolumn{1}{ |c| }{T} & TP & FP  \\ 
+\cline{2-4} \multicolumn{1}{ |c  }{} & \multicolumn{1}{ |c| }{F} & FN & TN  \\ 
+\cline{1-4}
+\end{tabular}
+\caption{Oblik tablice kontigencije}
+\label{tab:contigency}
+}
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{cc|c|c|}
+\cline{3-4}
+& & \multicolumn{2}{ c| }{Ispravno} \\ 
+\cline{3-4} & & T & F  \\ 
+\cline{1-4} \multicolumn{1}{ |c| }{\multirow{2}{*}{Dobiveno} } & \multicolumn{1}{ |c| }{T} & 4 & 3  \\ 
+\cline{2-4} \multicolumn{1}{ |c  }{} & \multicolumn{1}{ |c| }{F} & 1 & 2  \\ 
+\cline{1-4}
+\end{tabular}
+\caption{Primjer tablice kontigencije}
+\label{tab:contigency_example}
+}
+\end{table}
+
+Tablica kontigencije predstavlja polaznu točku nekim naprednijim mjerama performansi, a najčešća korištena mjera je preciznost (engl.\,\textit{accuracy}) \textit{ACC}, računa se
+\begin{equation}
+ACC = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}.
+
+U praksi, koriste se i mnoga druga mjerila izvedbe klasifikatora, mnoga opisana u radu \cite{powers2011evaluation}. Mjere često ovise i o prirodi samog zadatka. Primjerice, strojni prevoditelji rangiraju se prema \textit{BLEU} rezultatu, opisanom u \citep{papineni2002bleu}. U ovome radu spominjat će se neke druge mjere, no neće se eksplicitno objašnjavati. 
+
+\section{Metodologija ispitivanja značajnosti klasifikatora}
+
+Istraživanje novog optimalnog algoritma metode za zadatak strojnog učenja često uključuje izgradnju više modela i promatranje ponašanja tih modela nad različitim skupovima podataka. Ciljevi takvih istraživanja mogu biti: kako pronaći klasifikator koji u prosjeku radi vrlo dobro nad svim dostupnim skupovima podataka, koji klasifikator pruža najbolje rezultate nad malim (specifičnim) skupovima podataka, kada koristiti kombinaciju klasifikatora i sl. Ukoliko se radi o novom zadatku, ne postoji referentni sustav s kojim bi se novoizgrađeni sustav mogao usporediti. U slučaju napadanja poznatog, donekle rješenog problema potrebno je usporediti perfomanse novodobivenih postupaka s trenutno najboljim. Također, moguće je pretpostaviti da je na raspolaganju jedan ili više skupova podataka. Ti skupovi podataka možda dolaze iz različite domene. Na primjer, izdvajanje ključnih riječ iz novinskih članaka ili proze. 
+
+U najjednostavnijem slučaju izrade klasifikatora bi sadržavao:
+\begin{description}
+  \item[istraživačku hipotezu,] \hfill \\
+  Nova metoda $A$ radi bolje od trenutno općeprihvaćene metode $B$. Viši iznos vrijednosti znači da metoda radi bolje.
+  \item[nultu hipotezu $H_0$,] \hfill \\
+  Ne postoji razlika u performansama između sustava \textit{A} i \textit{B}.
+  \item[skup podataka,] \hfill \\
+  Postoji jedinstven skup podataka \engl{dataset} -- populacija. Moguće je uzimati uzorke $x$ iz populacije.
+  \item[način mjerenja] \hfill \\  
+  $c_A$ je rezultat sustava $A$, $c_B$ je rezultat sustava $B$. $d_{A,B}=c_A-c_B$ je razlika u perfomansama između sustava \textit{A} i \textit{B}.
+\end{description}
+Provođenje testiranja može se odvijati na čitavoj populaciji, ili se može uzorkovati nad populacijom i ispitivati ponašanje sustava $A$ i $B$ na uzorcima $x$ veličine $n$ iz populacije $X$. U slučaju uzorkovanja, testiranje hipoteze procjenjuje kolika je vjerojatnost:
+\begin{equation}
+\label{eq:vjerojatnost_nulte_hipoteze}
+p(d_{A,B}(X) > d_{A,B}(x) | H_{0}) < \alpha
+\end{equation}
+gdje je \textit{X} slučajna varijabla mogućih dobivenih uzoraka veličine \textit{n}, a $d_{A,B}(x)$ promatrana (konstantna) vrijednost. Ako vrijedi \ref{eq:vjerojatnost_nulte_hipoteze} za odabranu vrijednost $\alpha$ (najčešće $0.05$) onda se odbacuje nulta hipoteza. Dva su osnovna načina izračuna p-vrijednosti:
+\begin{itemize}
+\item izravnim izračunom,
+\item procjenom.
+\end{itemize}
+
+U idućem poglavlju bit će govora o oba načina. Prvo će se pokazati na primjerima često vidljivim u časopisima o strojnom učenju kako je moguće izračunati p-vrijednost s obzirom na različite okolnosti eksperimenta. Na čitatelju ostaje prepoznati uvjete vlastitog istraživanja te se prema tome odlučiti za jedan od ova dva načina.
+

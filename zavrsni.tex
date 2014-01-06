@@ -1,10 +1,13 @@
 \documentclass[times, utf8, seminar]{fer}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{amsmath}
-\usepackage{algpseudocode}
-\usepackage{algorithm}
-\makeatletter
-\renewcommand{\ALG@name}{Algoritam}
+\usepackage{hyperref}
+\usepackage{tabularx}
+%\usepackage{algpseudocode}
+%\usepackage{algorithm}
+%\makeatletter
+%\renewcommand{\ALG@name}{Algoritam}
 
 
 \begin{document}
@@ -22,12 +25,19 @@
 \tableofcontents
 
 \chapter{Uvod}
-
 \input{000_uvod.tex}
 
-\chapter{Ispitivanje statističke značajnosti}
+\chapter{Testiranje hipoteza}
+\input{001_testiranje_hipoteza.tex}
+
+\chapter{Kritike ispitivanje statističke značajnosti}
 \input{100_statisticka_znacajnost.tex}
 
+\chapter{Primjeri i tehnike ispitivanja značajnosti u strojnom učenju}
+\input{002_drugi_dio_uvod.tex}
+
+\chapter{Izračun p-vrijednosti}
+\input{003_usporedba_klasifikatora.tex}
 \chapter{Zaključak}
 Zaključak.
 

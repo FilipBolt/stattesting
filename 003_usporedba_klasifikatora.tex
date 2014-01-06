@@ -1,0 +1,140 @@
+P-vrijednost može se izračunati ili, ukoliko se ne može izračunati, aproksimirati. Jedna od najčešće korištenih metoda za procjenjivanje p-vrijednosti je upareni \engl{bootstrap}. Upareni bootstrap jedna je od najčešće korištenih metoda \citep{koehn2004statistical} zato što se može primjeniti na sve mjerne metode (uključujući složenije kao što su BLEU \citep{papineni2002bleu}, F1). 
+
+Konstruirano je $M$ klasifikatora koji rade nad $N$ različitih skupova podataka. Cilj je napraviti usporedbe:
+
+\begin{itemize}
+\item dvaju klasifikatora $A$ i $B$ na istom skupu podataka $X$,
+\item dvaju klasifikatora $A$ i $B$ na $N$ različitih skupova podataka ,
+\item više od dva ($M$) klasifikatora  na istom skupu podataka $X$ te
+\item više od dva ($M$) klasifikatora na $N$ različitih skupova podataka.
+\end{itemize}
+Prvo će se objasniti metode izravnog izračuna p-vrijednosti, a zatim metode kojima se aproksimira p-vrijednost.
+
+\section{Izravan izračun p-vrijednosti}
+
+\subsection{Usporedba dvaju klasifikatora na istom skupu podataka}
+
+%POTREBNO EDITIRATI
+U radu \citep{dietterich1998approximate} uspoređuje se pet statističkih testova usporedbe rezultata klasifikacije. Rezultati testova eksperimentalno se
+
+\subsection{Usporedba dvaju klasifikatora na različitom skup podataka}
+\label{subsec:couting}
+
+Analizom objavljenih radova na konferencijama \textit{International Conference of Machine Learning} između 1999. i 2003. godine \citep{demvsar2006statistical} detektirane su metode usporedbi klasifikatora nad različitim skupovima podataka:
+\begin{itemize}
+\item prosjek preciznosti u različitim skupovima podataka,
+\item t-test,
+\item upareni t-test jedan protiv ostalih,
+\item upareni t-test svatko protiv svakog,
+\item prebrojavanje pobjeda/nerješenih rezultata/poraza i
+\item prebrojavanje statistički značajnih pobjeda/nerješenih rezultata/poraza
+\end{itemize}
+
+Opće je prihvaćeno da je korištenje t-testa za usporedbu klasifikatora na različitim skupovima podataka neprimjeren. Samo neki od značajnih radova koji odbacuju t-test zbog neprimjerenosti koncepta. U radu \citep{demvsar2006statistical} preporučuje se Wilcoxonov test rangova s predznacima (engl.\,\textit{Wilcoxon ranked sign test}) \citep{wilcoxon1945individual}. Uz njega, koristi se i test s predznacima \cite{dixon1946statistical}. 
+
+U idućim pododjeljcima opisat će se različiti načini mjerenja statističke značajnosti. Za svaki bit će kratki opis kako funkcionira, uz referencu na podrobniji opis, što se smatra prednostima i manama tog postupka u znanstvenoj zajednici.
+
+\subsubsection{Računanje prosjeka}
+
+Mjerenje performansi klasifikatora nad različitim skupovima podataka moguće je jednostavno zbrojiti i uzeti srednju vrijednost:
+\begin{equation}
+\hat{X} = \frac{1}{N} \sum^{N}_{i = 1} c_{i}^{j}. 
+\end{equation}
+gdje je $\hat{X}$ je mjera dobrote klasifikacije, $N$ broj skupova podataka, a $c_{i}^{j}$ izvedba klasifikatora $c^j$ (ovdje $j\in (1,2)$) nad skupom podataka $i$.
+
+\citep{webb2000multiboosting} napominje kako ovakav način često nije smislen, jer usporedba grešaka između različitih skupova podataka iz različitih domena nije nešto što bi trebalo uspoređivati. Ukoliko nije smisleno raditi usporedbe rezultata u različitim domenama, zbranjanje tih vrijednosti također nije valjana operacija. Naravno, postoje slučajevi u kojima je ova metoda ispravna, stoga je ne valja u potpunosti odbaciti.
+
+\subsubsection{Upareni t-test}
+
+Upareni t-test \citep{sprinthall1990basic} uzima u obzir prosječnu razliku u performansama nad različitim skupovima podataka i provjerava ima li statistički značajne razlike. Neka su $c^{1}_{i}$ i $c^{2}_{i}$ rezultati dva klasifikatora na skupu podataka $i$, od ukupno $N$ skupova podataka. Razlika $d_i$ se definira kao $c^{1}_{i} - c^{2}_{i}$. Tada se \textit{t} vrijednost se dobije $\hat{d}/\sigma_{\hat{d}}$, gdje je $\sigma_ {\hat{d}}$ varijanca varijable $d_i$ raspoređenoj prema Studentovoj raspodjeli (engl.\,\textit{Student distribution}) s $N-1$ stupnjeva slobode. 
+
+Tri su temeljne zamjerke korištenja t-testa pri evaluaciji klasifikatora. Prva zamjerka spomenuta je prilikom mjerenja značajnosti računanjem prosjeka. U oba slučaja rade se usporedbe performansi između različitih skupova podataka, ali u ovom slučaju uzima se u obzir varijanca između skupova podataka, što donekle umanjuje standardnu pogrešku $\sigma_d$, no i dalje se radi dvojbena usporedba različitih skupova podataka. U slučaju da je uzorak manji od (približno) 30 jedinki, korištenje t-testa zahtjeva da uzorak zadovoljava uvjete normalne razdiobe. Dakle, problematično je korištenje t-testa sa malim uzorcima, jer nije moguće pouzdano ispitati normalnost nad malim skupom podataka \citep{razali2011power}. Treći problem korištenja t-testa je problem ekstremnih vrijednosti. Ekstremne vrijednosti (jako dobri ili jako loši rezultati) mogu učiniti pomaknuti distribuciju rezultata i tako umanjiti snagu t-testa.
+
+\subsubsection{Wilcoxonov test rangova s predznacima}
+
+Wilcoxonov test rangova s predznacima \citep{wilcoxon1945individual} je neparametarska verzija uparenog t-testa. Razlike u performansama klasifikatora se rangiraju za svaki skup podataka. Rangovi se formiraju prema apsolutnim vrijednostima razlika, a potom se uspoređuju rangovi pozitivnih i negativnih razlika. U slučaju jednakih vrijednosti, u rang se upisuje prosječna vrijednost. Kao što smo opisali kod uparenog t-testa, $d_i$ će predstavljati razliku performansi dva klasifikatora na $i$-tom skupu podataka (od ukupno $N$). Ako razlikujemo klasifikatore $1$ i $2$, potrebno je zbrojiti rangove $R^1$ i $R^2$, prema formulama:
+
+$$ R^1 = \sum_{d_i>0} rank(d_i) + \frac{1}{2} \sum_{d_i=0} rank(d_i) $$
+
+$$ R^2 = \sum_{d_i<0} rank(d_i) + \frac{1}{2} \sum_{d_i=0} rank(d_i) $$.
+
+Nerješeni slučajevi se jednoliko raspoređuju u svaku sumu. Ukoliko postoji neparan broj nerješenih slučajeva, jedan nerješeni slučaj se zanemaruje, kako bi brojka uvijek bila jednaka. Rezultat je statistički značajan ukoliko je je dobivena vrijednost veća od granične $T$ vrijednosti. $T$ vrijednost se dobiva kao $min(R^1, R^2)$ 
+Za uzorke manje od 25 moguće je pronaći točnih graničnih $T$ vrijednosti \citep{wilcoxon1973critical}, a za ostale potrebno je izračunati spomenutu $z$ statistiku:
+%SPOMENUTI Z statistiku
+$$z = \frac{T - \frac{1}{4}N(N+1)}{\sqrt{\frac{1}{24}N(N+1)(2N+1)}}$$
+
+Wilcoxonov test također radi usporedbe različitih skupova podataka, ali ne količinski, zbrajanjem iznosa razlika, već kvalitativno, zanemarujući apsolutne iznose razlika. Pretpostavka da su podatci normalno distribuirani nije potrebna, jer je Wilcoxonov test neparametarski. Utjecaj graničnih vrijednosti je smanjen jer se sada promatraju rangovi, umjesto apsolutnih vrijednosti. 
+
+Wilcoxonov test ima manju snagu od uparenog t-testa kada su podatci normalno distribuirani. U suprotnome, Wilcoxonov test može, ali i ne mora prema \citep{demvsar2006statistical} biti jači od t-testa.
+
+\subsubsection{Test znakova}
+
+Zanemarivanjem vrijednosti razlika u performansama klasifikatora isptivanje značajnosti svodi se na bilježenje rezultata kroz pobjede, poraze i izjednačene rezultate. Ako se uspoređuju dva algoritma na ovaj način, nulta hipoteza pretpostavlja kako će svaki algoritam imati približno $N/2$ pobjeda u skupu od $N$ podataka. Pošto razlikujemo dva ishoda, podatke moguće je pretpostaviti binomnu distribuciju podataka \citep{miller1965probability} i provesti binomni test \citep{dixon1946statistical}, test znakova (engl.\,\textit{sign test}). Postoje izračunate vrijednosti za test znakova vidljive u literaturi \citep{wilcoxon1973critical} prikazane i objašenjene u tablici \ref{tab:crit_val_twotailed_sign}.
+
+\begin{table}
+\begin{tabularx}{\textwidth}{c| XXXXXXXXXXXXXXXXXXXXX}
+\hline
+broj uzoraka & 5&6&7&8&9&10&11&12 & 13&14&15&16&17&18&19&20&21&22&23&24&25 \\
+$\alpha = 0.10$ & 0&0&0&1&1&1&2&2&3&3&3&4&4&5&5&5&6&6&7&7&7 \\
+\hline
+\end{tabularx}
+\caption{Kritične vrijednosti za dvostrani test znakova. Ukoliko je broj pobjeda manji ili jednak onome iz drugog retka, razlika je statistički značajna.}
+\label{tab:crit_val_twotailed_sign}
+\end{table}
+
+U testu znakova ne rade se usporedbe između različitih skupova podataka, dakle nije potrebno zadovoljiti pretpostavku da se podatci mogu/smiju uspoređivati, niti je potrebno da podliježu normalnoj razdiobi. Mana testa znakova jest da neće odbaciti nultu hipotezu ukoliko rezultati jednog algoritma nisu konstatno bolji od drugog. Prema tome, snaga testa znakova je manja od Wilcoxonovog testa.
+
+Prilikom nabrajanja korištenih testova statističke značajnosti u pododjeljku \ref{subsec:couting} još je spomenuto i prebrojavanje statistički značajnih pobjeda/nerješenih rezultata/poraza, što je ekvivalentno ovom načinu, prethodno filtrirajući rezultate nad kojima je utvrđena statistička značajnost. Statistička značajnost ispituje se jednim od testova značajnosti (opisanim u poglavlju %DODAJ REFERENCU NA PRETHODNO POGLAVLJE
+). Prema \citep{demvsar2006statistical} ovakav postupak je neispravan, jer pretpostavlja kako je moguće da statistički testovi razlikuju prave od slučajnih razlika. Statistički testovi mjere vjerojatnost dobivenog rezultata pod uvjetom da je nulta hipoteza zadovoljena, što nije ekvivalentno vjerojatnosti nulte hipoteze.
+
+\subsection{Usporedba više klasifikatora na različitom skupu podataka}
+
+Usporedba više od dva klasifikatora podrazumijeva kako više nije moguće provoditi testove zasnovane na uparenom t-testu iz istog razloga zašto nije moguće provoditi uzastopne t-testove -- gomilanje pogreške prvog tipa. \citep{salzberg1997comparing} je primjetio i dokazao kako je moguće primjeniti \textit{Bonferonnijevu metodu} (engl.\,\textit{Bonferroni correction}) i tako omogućiti višestruko testiranje. Bonferronijeva korekcija dozvoljava višestruke usporedbe kontroliranjem razine pogreške. \citep{bland1995multiple}. Primjenom korektivnog faktora Bonferonni korekcija umanjuje $p$ smanjujući mogućnost pogreške tipa I.
+
+Opće statističke metode koje bi se mogle koristiti za usporedbu više klasifikatora na različitim skupovima su analiza varijance (engl.\,\textit{analysis of variance}) ANOVA i Friedmanov test (engl.\,\textit{Friedman test}). 
+
+\subsubsection{Analiza varijance}
+
+%NAGLASITI VIŠESTRUKOST
+
+ANOVA je često korištena metoda za testiranje značajnosti razlika između više od dvije srednje vrijednosti. Opisana je u \citep{fisher1956statistical}. Nulta hipoteza koju ANOVA pretpostavlja je da nema statistički značajne razlike između vrijednosti koje se uspoređuju. Odbacivanje nulte hipoteze nam govori samo da postoji značajna razlika, a ne gdje se nalazi. U tu svrhu osmišljeni su različiti \textit{post-hoc} testovi, primjerice Tukeyev (engl.\,\textit{Tukey's test}) ili Dunnetov test (engl.\,\textit{Dunnett test})\citep{wallenstein1980some}. Tukeyev test uparuje i uspoređuje sve kombinacije klasifikatora, dok Dunnetov test radi usporedbe svih klasifikatora s jednim referentim. Navedeni \textit{post-hoc} testovi u suštini se ne razlikuju od višestruke primjene t-testa,  s time što \textit{post-hoc} testovi kontroliraju mogućnost pogreške tipa I.
+
+Korištenje ANOVA postupka zahtjeva dva uvjeta. ANOVA pretpostavlja kako analizirani uzorci podliježu normalnoj raspodjeli, što često nije slučaj prilikom analize postupaka strojnog učenja. Druga pretpostavka ANOVE je homogenost varijanci (engl.\,\textit{homogeneity of variance}). Svojstvo homogenosti varijanci je ispunjeno ukoliko sve mjere imaju jednake varijance, što se često ne može primjeniti na rezultate klasifikatora. Primjena \textit{post-hoc} testova se ne preporučuje ukoliko pretpostavke ANOVE nisu zadovoljene \citep{zar1974multiple}.
+
+\subsubsection{Friedmanov test}
+
+Kao što je Wilcoxonov test znakova neparametarska verzija uparenog t-testa, tako je Friedmanov test \citep{friedman1937use} neparametarska verzija višestruke ANOVE. U Friedmanovom testu se rangiraju algoritmi za svaki skup podataka zasebno. U slučaju jednakih vrijednosti, dodjeljuju se prosječni rangovi.
+
+Ako je $r_{i}^{j}$ rang $j$-tog klasifikatora na $i$-tom skupu podataka (ukupno $N$). Friedmanov test uspoređuje prosječne rangove klasifikatora:
+
+$$
+R_j = \frac{1}{N} \sum_{i}^{N}r_{i}^{j}
+$$
+
+Nulta hipoteza u Friedmanovom testu tvrdi da nema razlike između srednjih vrijednosti rangova klasifikatora. Iz ranga $R_j$, stupnjeva slobode $k-1$ Friedmanova vrijednost računa se:
+
+$$
+\chi_{F}^{2} = \frac{12N}{k(k+1)}\left[\sum_j R_{j}^{2}-\frac{k(k+1)^2}{4}\right]
+$$.
+
+U praksi se češće Friedmanova vrijednost svodi na F-vrijednost koja podliježe F-distribuciji s $k-1$ i $(k-1)(N-1)$ stupnjeva slobode prema formuli:
+
+$$
+F_F = \frac{(N-1)\chi_{F}^{2}}{N(k-1)-\chi_{F}^{2}}
+$$
+
+Friedman je usporedio svoj test s ANOVA-om kroz eksperiment \citep{friedman1940comparison} i zaključio kako se testovi uglavnom slažu oko rezultata. 
+
+Kada Friedmanov test opovrgne nultu hipotezu, potrebno je nastaviti s \textit{post-hoc testovima}. Nemenyijev test (engl.\,\textit{Nemenyi test}) \citep{nemenyi1963distribution} neparametarska je verzija Tukeyevog testa za ANOVA-u, dakle uspoređuje rezultate svih klasifikatora međusobno. Performanse dvaju klasfikatora se značajno razlikuju ukoliko se prosjeci njihovih rangova razlikuju za barem:
+
+$$
+CD = q_{\alpha}\sqrt{\frac{k(k+1)}{6N}}
+$$
+
+U slučaju da je potrebno uspoređivati sve klasifikatore s jednim referentnim, moguće je koristiti proceduru koja primjenom Bonferonnijevog korektivnog faktora radi međusobne usporedbe. U ovom slučaju radi se manje usporedbi ($k-1$), naspram $k(k-1)/2$ prilikom izvedbe Nemenyjevog testa. Što se radi manje usporedbi, to je test jači, zato se i prilikom usporedbi s referentnim klasifikatorom preferira ovakav način usporedbe. Usporedba $i$-tog i $j$-tog klasifikatora se računa:
+$$
+z = \frac{R_i - R_j}{\sqrt{\frac{k(k+1)}{6N}}}
+$$. 
+Dobivena $z$ vrijednost se uspoređuje s odgovarajućim vrijednostima normalne distribucije za utvrđivanje značajnosti. 
+
+U radu \citep{demvsar2006statistical} analizirani su Nemenyijev test s testom koji koristi Bonferonni korekciju. Zaključeno je kako je snaga testa veća ukoliko se uspoređuju svi klasifikatori s jednim referentnim. Međusobna usporedba svih klasifikatora se jedino preporučuje u slučaju kada je potrebno dokazati da su novootkrivene tehnike bolje od svih postojećih.
