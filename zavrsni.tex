@@ -4,10 +4,12 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{tabularx}
-%\usepackage{algpseudocode}
-%\usepackage{algorithm}
-%\makeatletter
-%\renewcommand{\ALG@name}{Algoritam}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritam}
 
 
 \begin{document}
@@ -30,16 +32,14 @@
 \chapter{Testiranje hipoteza}
 \input{001_testiranje_hipoteza.tex}
 
-\chapter{Kritike ispitivanje statističke značajnosti}
-\input{100_statisticka_znacajnost.tex}
-
-\chapter{Primjeri i tehnike ispitivanja značajnosti u strojnom učenju}
+\chapter{Mjerenje rezultata sustava u strojnom učenju}
 \input{002_drugi_dio_uvod.tex}
 
-\chapter{Izračun p-vrijednosti}
+\chapter{Ispitivanje statističke značajnosti u strojnom učenju}
 \input{003_usporedba_klasifikatora.tex}
+
 \chapter{Zaključak}
-Zaključak.
+\input{005_zakljucak.tex}
 
 \bibliography{literatura}
 \bibliographystyle{fer}

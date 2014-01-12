@@ -1,23 +1,146 @@
-P-vrijednost može se izračunati ili, ukoliko se ne može izračunati, aproksimirati. Jedna od najčešće korištenih metoda za procjenjivanje p-vrijednosti je upareni \engl{bootstrap}. Upareni bootstrap jedna je od najčešće korištenih metoda \citep{koehn2004statistical} zato što se može primjeniti na sve mjerne metode (uključujući složenije kao što su BLEU \citep{papineni2002bleu}, F1). 
-
-Konstruirano je $M$ klasifikatora koji rade nad $N$ različitih skupova podataka. Cilj je napraviti usporedbe:
-
+Prema \citep{dietterich1998approximate} postoji devet temeljnih statističkih pitanja u strojnom učenju, a prikazana su grafički na slici \ref{fig:stat_questions}. Pitanja su hijerarhijski organizirana u četiri razine, razina: 
 \begin{itemize}
-\item dvaju klasifikatora $A$ i $B$ na istom skupu podataka $X$,
-\item dvaju klasifikatora $A$ i $B$ na $N$ različitih skupova podataka ,
-\item više od dva ($M$) klasifikatora  na istom skupu podataka $X$ te
-\item više od dva ($M$) klasifikatora na $N$ različitih skupova podataka.
+\item domene -- jednolika ili raznolika,
+\item tehnike -- odabir klasifikatora ili algoritma učenja,
+\item vrste zadatka -- predviđanje ili usporedba algoritama/klasifikatora i 
+\item veličine populacije -- mala ili velika.
+ . 
 \end{itemize}
-Prvo će se objasniti metode izravnog izračuna p-vrijednosti, a zatim metode kojima se aproksimira p-vrijednost.
+Svaki list stabla predstavlja jedno pitanje, a do pitanja se dolazi uzimanjem u obzir svih prethodnika lista. Primjerice, kako predvidjeti preciznost klasifikatora u velikom, jednolikom skupu podataka je pitanje označeno brojem $1$ na slici. Također, bitno je napomenuti kako je bitan faktor i brojnost korištenih metoda tj. broj algoritama učenja ili klasifikatora. %TODO dopisati
 
-\section{Izravan izračun p-vrijednosti}
 
-\subsection{Usporedba dvaju klasifikatora na istom skupu podataka}
+\section{Terminologija}
 
-%POTREBNO EDITIRATI
-U radu \citep{dietterich1998approximate} uspoređuje se pet statističkih testova usporedbe rezultata klasifikacije. Rezultati testova eksperimentalno se
+U ovom odjeljku objasnit ćemo pojmove vezane za strojno učenje korištene u ostatku rada. Postoji mnogo referenci za upoznavanje s područjem strojnog učenja, kao što su \citep{anderson1986machine} i \citep{bishop2006pattern}. Kako se strojno učenje primjenjuje u sve više domena, tako postoji i literatura za upoznavanje sa strojnim učenjem, kao što je \citep{baldi2001bioinformatics}. 
 
-\subsection{Usporedba dvaju klasifikatora na različitom skup podataka}
+Razlika između algoritma učenja i klasifikatora je u tome što je klasifikator istrenirani proizvod bez mogućnosti daljnjeg razvitka. Algoritam učenja može proizvesti jedan ili više klasfikatora. Ponekad se uspoređuju algoritmi učenja, a ponekad klasifikatori, ovisno o primjeni. Primjerice, potrebno je izgraditi stroj za automatsko prepoznavanje vrsta riječi u obradi prirodnog teksta: moguće je pokušati uporabiti različite algoritme učenja za dobivanje klasifikatora. Moguće je uspoređivati rezultate algoritama učenja, ali i samih klasifikatora. U kontekstu učenja kod čovjeka, moguće je uspoređivati tehnike učenja, primjerice tzv. kampanjski način učenja s redovitim učenjem, što bi odgovaralo usporedbi algoritama učenja. Uspoređivanje studenata i njihovih rezultata na ispitima odgovara usporedbi klasifikatora.
+
+Moguće je uspoređivati najmanje dva algoritma učenja ili klasifikatora, ali i više. Prilikom usporedbe dvaju algoritama učenja koristit će se imena $A$ i $B$, a proizvodi tih algoritama učenja, klasifikatori, imat će oznate $C_A$ i $C_B$. Niz cjelobrojnih vrijednosti $1\dots i$ služiti razlikovanju više od dva algoritma učenja, a pripadajući klasifikatori označavat će se sa $C_1 \dots C_i$. Skup podataka bit će označen znakom $S$, a njegova veličina oznakom $n$. Svi ostali pojmovi bit će objašnjeni u odjeljku u kojem se prvi put spominju.
+
+\begin{figure}[h]
+\centering
+\input{stat_tree.tex}
+\caption{Statistička pitanja u strojnom učenju}
+\label{fig:stat_questions}
+\end{figure}
+
+\section{Statistička pitanja usporedbe u strojnom učenju}
+
+Ovaj odjeljak pokušat će odgovoriti na statistička pitanja vezana uz usporedbu algoritama učenja/klasifikatora u strojnom učenju ($3$, $4$, $7$, $8$), usporediti algoritme učenja i klasifikatore nad raznolikim skupovima podataka (pitanje $9$) te opisati načine ispitivanja statističke značajnosti u okruženju s više od 2 algoritma učenja ili klasifikatora.
+
+\subsection{Pitanje 3 -- usporedba klasifikatora na velikom skupu podataka}
+\label{subsec:pitanje3}
+
+Konstruirani su klasifikatori $C_A$ i $C_B$. Moguće je izdvojiti zaseban skup podataka $T$ nad kojim će se testirati dobiveni klasifikatori. Potrebno je mjeriti performanse svakog klasifikatora na posebnom skupu za testiranje te primjeniti McNemarov test.
+
+\subsubsection{McNemarov test}
+
+Za McNemarov test, opisan u \citep{everitt1992analysis} potrebno je populaciju $S$ podijeliti na skupove za treniranje $R$ i testiranj $T$. Algoritmi $A$ i $B$ proizvode klasifikatore $C_A$ i $C_B$ koji produciraju rezultate klasifikacije nad skupom podataka za testiranje. Provođenje testa zahtjeva izgradnju tablice kontigencije:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{{| >{\centering\arraybackslash}m{6cm} | >{\centering\arraybackslash}m{6cm} |}}
+\hline
+broj primjera koje su $C_A$ i $C_B$ pogrešno klasificirali & broj primjera koje je $C_A$ pogrešno, a $C_B$ ispravno klasificirao \\ \hline
+broj primjera koje je $C_B$ pogrešno, a $C_A$ ispravno klasificirao & broj primjera koje su $C_A$ i $C_B$ ispravno klasificirali \\
+\hline
+\end{tabular}
+\end{table}
+skraćeno:
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+$n_{00}$ & $n_{01}$ \\ \hline
+$n_{10}$ & $n_{11}$ \\
+\hline
+\end{tabular}
+\end{table}
+gdje je $n = n_{00}+n_{01}+n_{10}+n_{11}$ ukupan broj primjera u skupu za testiranje $T$. Prema nultoj hipotezi, oba klasifikatora trebala bi imati jednak broj pogrešaka $n_{10}=n_{01}$. McNemarov test, zasnovan na $\chi^2$ testu, ispituje koliko vjerojatnost raspodjele broja pogrešno klasificiranih primjera prema nultoj hipotezi, a očekivana distribucija može se prikazati kontigencijskom tablicom:
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+$n_{00}$ & $(n_{01} + n_{10})/2$ \\ \hline
+$(n_{01} + n_{10})/2$ & $n_{11}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+U ovom slučaju $\chi^2$ statistika iznosi:
+\begin{equation}
+\frac{(|n_{01} - n_{10}|-1)^2}{n_{01}+n_{10}}
+\end{equation}
+
+Kako bi se odbacila nulta hipoteza, potrebno je da vrijednost dobivena iz testnog skupa podataka veća od granične vrijednosti odgovarajućih stupnjeva slobode ($\chi^{2}_{1,0.95} = 3.84$).
+
+\subsection{Pitanje 4 -- usporedba klasifikatora na malom skupu podataka}
+
+Dva klasifikatora, $C_A$ i $C_B$ dobiveni su treniranjem algoritama učenja $A$ i $B$ nad malim skupom podataka $S$. Ovaj problem \citep{dietterich1998approximate} izjednačava s pitanjem 8 u odjeljku \ref{subsec:pitanje8}, gdje će biti objašnjene potencijalne metode za rješenje problema. 
+
+\subsection{Pitanje 7 -- usporedba algoritama učenja na velikom skupu podataka}
+
+Algoritmi učenja $A$ i $B$ treniraju se i testiraju na velikom skupu podataka $S$. Odgovor na ovo pitanje dobiveno je u istraživanju u okviru DELVE projekta \citep{hintondelve}: potrebno je podijeliti skup $S$ na disjunktne skupove za trening te izdvojiti jedan skup za test. Klasifikatori dobiveni treniranjem algoritama učenja nad svim skupovima za treniranje se ispituju skupom za testiranje. Moguće je primijeniti analizu varijance s varijablama \begin{itemize}
+\item izbora algoritma učenja,
+\item izbora skupa za treniranje i 
+\item za svaku jedinku iz skupa za testiranje.
+\end{itemize}
+Kvazi-$F$ testom \citep{eisen1966225} se utvrđuje postoji li statistička značajna razlika između različitih algoritama učenja.
+
+\subsection{Pitanje 8 -- usporedba algoritama učenja na malom skupu podataka}
+\label{subsec:pitanje8}
+
+Dva algoritma učenja $A$ i $B$ potrebno je istrenirati na skupu $S$ i provjeriti koji će od algoritama davati bolje rezultate na novom skupu jednake veličine kao i $S$. U radu \citep{dietterich1998approximate} opisuje se pet različitih statističkih testova za usporedbu algoritama učenja s ograničenim skupom podataka. 
+
+\subsubsection{McNemarov test}
+
+Ovdje je ponovno moguće je iskoristiti McNemarov test opisan u odjeljku \ref{subsec:pitanje3}. No, nedostatak McNemarovog testa je činjenica da se skup za treniranje $R$ ($|R| << |S|)$ odabire jednom, a nad njim se potom rade sve usporedbe. Prema tome, McNemarov test je primjenjiv ukoliko je varijabilnost podataka mala, jer se radi o podskupu mnogo većeg (populacijskog) skupa $S$. Pretpostavlja se kako sve što vrijedi za odabrani skup $R$, vrijedi i za čitavu populaciju $S$, što ne mora biti istina u praksi. 
+
+\subsubsection{Test razlika}
+
+Test razlika \engl{Test for the difference of two proportions} \citep{snedecor1980statistical} mjeri razinu pogreške kod algoritama $A$ i $B$ preko vjerojatnosti:
+\begin{equation}
+p_A = \frac{n_{00} + n_{01}}{n}
+\end{equation}
+\begin{equation}
+p_B = \frac{n_{00} + n_{10}}{n}
+\end{equation}
+
+Ako su $p_A$ i $p_B$ su vjerojatnosti pogrešne klasifikacije algoritama $A$ i $B$, broj pogrešno klasificiranih $N$ primjera zadovoljava binomnu raspodjelu srednje vrijednosti $Np_A$ i varijance $p_A(1-p_A)N$. Binomna raspodjela prelazi u normalnu za dovoljno velik broj primjera $n$. Ako pretpostavimo da su $p_A$ i $p_B$ nezavisni, veličina $p=(p_A+p_B)/2$ također zadovoljava normalnu raspodjelu. Da bi nulta hipoteza bila zadovoljena, srednja vrijednost izvedene veličine $p$ bit će nula, a standardna pogreška i $z$ vrijednost:
+\begin{equation}
+se = \sqrt{\frac{2p(1-p)}{n}}.
+\end{equation}
+\begin{equation}
+z = \frac{p_A-p_B}{\sqrt{2p(1-p)/n}}.
+\end{equation}
+Nulta hipoteza se odbija je dobivena $z$ vrijednost van graničnih vrijednosti ($|z| > Z_{0.975} = 1.96$ kod dvostranog testa s $\alpha=0.05$).
+
+Prilikom postavljanja testa, pogrešno se pretpostavlja nezavisnost mjera $p_A$ i $p_B$, mjerenih nad istim skupom podataka $T$. Također, test, kao i McNemarov, uzima u obzir jedinstveni skup za treniranje $R$.	
+
+\subsubsection{T-test s resempliranjem}
+
+T-test s resempliranjem je najkorišteniji test u strojnom učenju, prema \citep{dietterich1998approximate}. Prvi korak je izrada uzoraka $R$, unaprijed poznate veličine, iz skupa $S$ i kreiranje testnih skupova $T$ iz dobivenih uzoraka. Uzorkovanje se ponavlja; često korišten broj ponavljanja je 30. $p_{A}^{i}$ i $p_{B}^{i}$ su vjerojatnosti pogrešne klasifikacije algoritama klasifikatora dobivenih algoritmima $A$ i $B$ nad $i$-tim skupom podataka. Pod pretpostavkom da je uzorkovanje neovisno mjera $p^{(i)} = p^{(i)}_{A} - p_{B}^{(i)}$ moguće je primjeniti Studentov t-test, gdje se t-statistika dobije formulom:
+\begin{equation}
+\hat{p} = \frac{1}{n}\sum_{i=1}^{n} p^{(i)}
+\end{equation}
+\begin{equation}
+t = \frac{\hat{p} \cdot \sqrt{n}}{\sum_{i=1}^{n} (p^{(i)}-\hat{p})^2}.
+\end{equation}
+Nulta hipoteza se odbija ako je dobivena $t$ vrijednost veća od odgovarajuće (tablične) $t$ vrijednosti (primjerice, $|t|>t_{29,0.975} = 2.05$ za 30 uzorkovanja). Ponovno, radi se pretpostavka nezavisnosti varijabli $p_{A}^{(i)}$ i $p_{B}^{(i)}$ do kojih se dolazi uzorkovanjem iz istog skupa podataka. Druga pogrešna pretpostavka nezavisnosti radi se prilikom zbrajanja $p^{(i)}$ vrijednosti iz različitih uzorkovanja. Ovdje pretpostavka nezavisnosti ne stoji zbog mogućih preklapanja uzoraka.
+
+\subsubsection{Upareni t-test s $k$-strukom unakrsnom validacijom}
+
+Jedna od mana t-testa s resempliranjem je (ponekad) neispravna pretpostavka o nezavisnosti podataka u različitim uzorcima. Upareni t-test s $k$-strukom unakrsnom validacijom dijeli skup podataka $S$ na $k$ disjunktnih skupova za testiranje jednake veličine $T_1, \dots ,T_k$. Skup za treniranje u koraku $i$ dobiva se unijom svih skupova $T_j, j\neq i$. Sve ostalo identično je kao i u prethodno objašnjenom t-testu. Prema \citep{dietterich1998approximate} jedina mana ovog testa je visoki korelacijski faktor između različitih skupova za treniranje. 
+
+\subsubsection{5x2cv upareni t-test}
+
+Kako bi prebrodili mane uparenog t-testa s $k$-strukom unakrsnom validacijom \citep{dietterich1998approximate} je primijetio kako bilo kakvo preklapanje u skupovima podataka za testiranje ili treniranje narušava performanse testa. Iz tog razloga, osmišljen je 5x2cv upareni t-test. U tom testu pet puta se ponavlja unakrsna validacija s dva preklapanja \engl{5 replications of 2-fold cross validation}. Prilikom svake podjele skupa podataka $S$ dobivaju se skupovi $S_1$ i $S_2$. Algoritmi $A$ i $B$ koriste oba skupa koriste se za treniranje i testiranje. Ispitivanjem dobivenih klasifikatora dobiju se vjerojatnosti: $p_{A}^{(1)}$, $p_{A}^{(2)}$, $p_{B}^{(1)}$, $p_{B}^{(2)}$, iz njih razlike $p^{(1)}=p_{A}^{(1)}-p_{B}^{(1)}$ i $p^{(2)}=p_{A}^{(2)}-p_{B}^{(2)}$, iz razlika varijanca $s^2=(p^{(1)}-\hat{p})^2+(p^{(2)} - \hat{p})^2$, s time da je $\hat{p} = (p^{(1)}+p^{(2)})/2$. $s_{i}^{2}$ je varijanca dobivena u $i$-itom (od 5) ponavljanju. Iz toga moguće je dobiti vrijednost t statistike, 5x2cv $\tilde{t}$ vrijednost iz:
+\begin{equation}
+\tilde{t} = \frac{p_{1}^{(1)}}{\sqrt{\frac{1}{5}\sum_{i=1}^{5}s_{i}^{2}}}
+\end{equation}
+Prema nultoj hipotezi dobivena 5x2cv $\tilde{t}$ statistika poprima obilježja t-raspodjele s pet stupnjeva slobode. \citep{dietterich1998approximate} je teorijski i eksperimentalno dokazao ovu tvrdnju. Alpaydm u svom radu \citep{alpaydm1999combined}  primjećuje kako vrijednost dobivene $\tilde{t}$ statistike ovisi o izboru $p_{i}^{(j)}$ vjerojatnosti (ovdje $p_{1}^{(1)}$. Iz tog razloga predlaže poboljšanje 5x2cv t-testa, kombinirani 5x2cv $F$ test koji uzima u obzir sve dobivene $p_{i}^{(j)}$ vjerojatnosti. 
+
+\subsection{Pitanje 9 -- usporedba na raznolikom skupu podataka}
 \label{subsec:couting}
 
 Analizom objavljenih radova na konferencijama \textit{International Conference of Machine Learning} između 1999. i 2003. godine \citep{demvsar2006statistical} detektirane su metode usporedbi klasifikatora nad različitim skupovima podataka:
@@ -30,9 +153,9 @@ Analizom objavljenih radova na konferencijama \textit{International Conference o
 \item prebrojavanje statistički značajnih pobjeda/nerješenih rezultata/poraza
 \end{itemize}
 
-Opće je prihvaćeno da je korištenje t-testa za usporedbu klasifikatora na različitim skupovima podataka neprimjeren. Samo neki od značajnih radova koji odbacuju t-test zbog neprimjerenosti koncepta. U radu \citep{demvsar2006statistical} preporučuje se Wilcoxonov test rangova s predznacima (engl.\,\textit{Wilcoxon ranked sign test}) \citep{wilcoxon1945individual}. Uz njega, koristi se i test s predznacima \cite{dixon1946statistical}. 
+Opće je prihvaćeno da je korištenje t-testa za usporedbu klasifikatora na različitim skupovima podataka neprimjereno. U radu \citep{demvsar2006statistical} preporučuje se Wilcoxonov test rangova s predznacima (engl.\,\textit{Wilcoxon ranked sign test}) \citep{wilcoxon1945individual}. Uz njega, koristi se i test s predznacima \cite{dixon1946statistical}. 
 
-U idućim pododjeljcima opisat će se različiti načini mjerenja statističke značajnosti. Za svaki bit će kratki opis kako funkcionira, uz referencu na podrobniji opis, što se smatra prednostima i manama tog postupka u znanstvenoj zajednici.
+U idućim pododjeljcima opisat će se različiti načini mjerenja statističke značajnosti viđeni u znanstvenim publikacijama.
 
 \subsubsection{Računanje prosjeka}
 
@@ -133,8 +256,43 @@ $$
 
 U slučaju da je potrebno uspoređivati sve klasifikatore s jednim referentnim, moguće je koristiti proceduru koja primjenom Bonferonnijevog korektivnog faktora radi međusobne usporedbe. U ovom slučaju radi se manje usporedbi ($k-1$), naspram $k(k-1)/2$ prilikom izvedbe Nemenyjevog testa. Što se radi manje usporedbi, to je test jači, zato se i prilikom usporedbi s referentnim klasifikatorom preferira ovakav način usporedbe. Usporedba $i$-tog i $j$-tog klasifikatora se računa:
 $$
-z = \frac{R_i - R_j}{\sqrt{\frac{k(k+1)}{6N}}}
-$$. 
+z = \frac{R_i - R_j}{\sqrt{\frac{k(k+1)}{6N}}}.
+$$
 Dobivena $z$ vrijednost se uspoređuje s odgovarajućim vrijednostima normalne distribucije za utvrđivanje značajnosti. 
 
 U radu \citep{demvsar2006statistical} analizirani su Nemenyijev test s testom koji koristi Bonferonni korekciju. Zaključeno je kako je snaga testa veća ukoliko se uspoređuju svi klasifikatori s jednim referentnim. Međusobna usporedba svih klasifikatora se jedino preporučuje u slučaju kada je potrebno dokazati da su novootkrivene tehnike bolje od svih postojećih.
+
+\section{Metode procjene p-vrijednosti}
+
+U dosadašnjem dijelu odgovaranja na statistička pitanja iz strojnog učenja uvijek je bilo moguće analitički izračunati relevantnu statističku mjeru ili željenu $p$-vrijednost. U slučajevima kada nije moguće ili nije ispravno zbog razloga opisanih u odjeljku \ref{sec:critique} kao alternativna opcija nameće se procjena $p$-vrijednosti. U narednom pododjeljku opisat će se takva tehnika nazvana \textit{bootstrap}.
+
+\subsection{Bootstrap}
+
+Bootstrap tehnikom moguće je procijeniti \textit{p}-vrijednost \citep{thompson1993use}. Prema Thompsonu, ispravnije je koristiti bootstrap metodu od analtičkih metoda za dokazivanje statističke značajnosti. Ovdje ćemo opisati primjenu boostrap metode u strojnom učenju. To je samo jedan način provedbe boostrap metode, generalno opisane u \citep{efron1993introduction}. 
+
+U boostrap metodi \citep{berg2012empirical} uzimaju se uzorci $x_i$ iz populacije i mjere  $f_{A}^{i}$ i $f_{B}^{i}$: performanse klasifikatora $C_A$ i $C_B$. $\delta(x_i) = f_{A}^{i} - f_{B}^{i}$ je očekivana razlika u performansama između klasifikatora $A$ i $B$. Zbog ograničenog skupa podataka podaci iz $S$ uzorkuju se sa zamjenom \engl{sampling with replacement}. Tako dobiveni uzorci nazivaju se \textit{bootstrap} uzorcima.
+
+Za dobivene uzorke $x_i$, prema nultoj hipotezi, bi trebala vrijediti jednakost:
+\begin{equation}
+\label{eq:jednakost_delta}
+\frac{1}{k}\sum_{i=0}^{k}\delta(x_i) = \delta(x)
+\end{equation}
+
+gdje je \textit{k} broj uzoraka. Ako se želi provjeriti može li se odbaciti nulta hipoteza, potrebno je provjeriti \textit{koliko često klasifikator $C_A$ daje rezultate koji su bolji od očekivanih}. Očekivani rezultat je da je klasifikator $C_A$ bolji od klasifikatora $C_B$ za $\delta(x)$. Prema tome, potrebno je prebrojati u koliko je slučajeva \textit{A} bio bolji od $C_B$ za $2\delta(x)$. Pseudokod bootstrap postupka je prikazan je \citep{berg2012empirical} bootstrap postupka prikazan je \ref{code:bootstrapkod}. U završnom koraku dolazi se do procjenjene $p$-vrijednosti na temelju koje se donosi odluka o odbacivanju nulte hipoteze. Najveća prednost bootstrap metode je mogućnost računanja $\delta(x)$ za bilo koju metriku. 
+
+\begin{algorithm}
+\caption{Pseudokod bootstrap postupka}\label{code:bootstrapkod}
+\begin{algorithmic}[1]
+\State Generiranje $M$ bootstrap uzoraka $x_i$ veličine $n$ nasumičnim izborom s ponavljanjem iz populacije $S$
+\State $s=0$
+\Repeat 
+\If{$\delta(x_i)>2\delta(x)$}
+\State $s=s+1$
+\EndIf
+\Until{$i>n$}
+\State $p=\frac{s}{M}$
+\end{algorithmic}
+\end{algorithm}
+
+
+

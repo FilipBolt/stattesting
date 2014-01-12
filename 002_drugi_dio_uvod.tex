@@ -14,7 +14,7 @@ Dobiveno & T & T & T & F & F & F & T & T & T & T \\ \hline
 
 \section{Mjerenje performansi modela strojnog učenja}
 
-Primjerice, radi se na automatskom prepoznavanju ključnih riječi u tekstu pomoću modela baziranom na strojnom učenju, klasifikatoru. Konačan cilj istraživanja je usporedba i verifikacija performansi dva klasifikatora ključnih riječi, kako bi se pronašao optimalan klasifikacijski sustav. Ulaz klasifikatoru je dokument, a izlaz klasifikatora mora biti niz ključnih riječi. Postoje referentne vrijednosti (engl.\,\textit{gold standard}), koje se smatraju ispravnim ključnim riječima pojedinog dokumenta s kojima se uspoređuje rezultat dobiven klasifikatorom. U tablici \ref{tab:usporedba_predict_gold} dan je primjer ispitivanja rezultata klasifikatora. U prvom stupcu je popis riječi nad kojima se provodi klasifikacija, u drugom stupcu označena je (\textit{T} je točno, \textit{N} netočno) ispravna oznaka riječi, tj. je li neka riječ ključna (\textit{T}) ili nije (\textit{F}). Treći stupac predstavlja izlaz klasifikatora za riječ u odgovarajućem retku. Iz navedene tablice možemo vidjeti kako su moguće četiri kombinacije podudaranja izlaza klasifikatora i stvarne vrijednosti. 
+Primjerice, radi se na automatskom prepoznavanju ključnih riječi u tekstu temeljem algoritama učenja baziranih na strojnom učenju. Algoritmi proizvode klasifikatore koji obavljaju prepoznavanje ključnih riječi. Cilj istraživanja je usporedba i verifikacija performansi dvaju klasifikatora ključnih riječi, u svrhu pronalska optimalnog klasifikatora. Ulaz klasifikatoru je dokument, a izlaz klasifikatora je niz ključnih riječi. Postoje referentne vrijednosti (engl.\,\textit{gold standard}), koje se smatraju ispravnim ključnim riječima pojedinog dokumenta s kojima se uspoređuje rezultat dobiven klasifikatorom. U tablici \ref{tab:usporedba_predict_gold} dan je primjer ispitivanja rezultata klasifikatora. Jedan stupac tablice govori kako je klasificirana riječ u odnosu na točan rezultat (\textit{T} je točno, \textit{N} netočno). Iz navedene tablice možemo vidjeti kako su moguće četiri kombinacije podudaranja izlaza klasifikatora i stvarne vrijednosti. 
 
 Popisivanje svih rezultata može biti nepregledno, pogotovo kod većeg broja testnih primjera, stoga se koriste tablice kontigencije \engl{contigency tables}. Njima se dobivaju agregirane vrijednosti ispitivanja klasifikatora, a daju pregled koliko ima 
 \begin{itemize}
@@ -53,29 +53,29 @@ Popisivanje svih rezultata može biti nepregledno, pogotovo kod većeg broja tes
 }
 \end{table}
 
-Tablica kontigencije predstavlja polaznu točku nekim naprednijim mjerama performansi, a najčešća korištena mjera je preciznost (engl.\,\textit{accuracy}) \textit{ACC}, računa se
+Tablica kontigencije predstavlja polaznu točku nekim naprednijim mjerama performansi, a najčešća korištena mjera je preciznost (engl.\,\textit{accuracy} -- \textit{ACC}), računa se
 \begin{equation}
 ACC = \frac{TP + TN}{TP + TN + FP + FN}
 \end{equation}.
 
 U praksi, koriste se i mnoga druga mjerila izvedbe klasifikatora, mnoga opisana u radu \cite{powers2011evaluation}. Mjere često ovise i o prirodi samog zadatka. Primjerice, strojni prevoditelji rangiraju se prema \textit{BLEU} rezultatu, opisanom u \citep{papineni2002bleu}. U ovome radu spominjat će se neke druge mjere, no neće se eksplicitno objašnjavati. 
 
-\section{Metodologija ispitivanja značajnosti klasifikatora}
+\section{Metodologija ispitivanja značajnosti}
 
-Istraživanje novog optimalnog algoritma metode za zadatak strojnog učenja često uključuje izgradnju više modela i promatranje ponašanja tih modela nad različitim skupovima podataka. Ciljevi takvih istraživanja mogu biti: kako pronaći klasifikator koji u prosjeku radi vrlo dobro nad svim dostupnim skupovima podataka, koji klasifikator pruža najbolje rezultate nad malim (specifičnim) skupovima podataka, kada koristiti kombinaciju klasifikatora i sl. Ukoliko se radi o novom zadatku, ne postoji referentni sustav s kojim bi se novoizgrađeni sustav mogao usporediti. U slučaju napadanja poznatog, donekle rješenog problema potrebno je usporediti perfomanse novodobivenih postupaka s trenutno najboljim. Također, moguće je pretpostaviti da je na raspolaganju jedan ili više skupova podataka. Ti skupovi podataka možda dolaze iz različite domene. Na primjer, izdvajanje ključnih riječ iz novinskih članaka ili proze. 
+Potraga za novim, optimalnim algoritmom učenja za zadatak strojnog učenja često uključuje izgradnju više modela s različitim algoritmima i promatranje ponašanja tih modela nad različitim skupovima podataka. Ciljevi takvih istraživanja mogu biti: kako konstruirati klasifikator koji u prosjeku radi vrlo dobro nad svim dostupnim skupovima podataka, koji klasifikator pruža najbolje rezultate nad malim (specifičnim) skupovima podataka, kada koristiti kombinaciju algoritam učenja, a kada klasifikator i sl. Ukoliko se radi o novom zadatku, ne postoji referentni sustav s kojim bi se novoizgrađeni sustav mogao usporediti. U slučaju napadanja poznatog, donekle rješenog problema potrebno je usporediti perfomanse novodobivenih postupaka s trenutno najboljim. Također, moguće je pretpostaviti da je na raspolaganju jedan ili više skupova podataka. Ti skupovi podataka možda dolaze iz različite domene. Na primjer, izdvajanje ključnih riječi iz skupova podataka $S_1$ i $S_2$, gdje je $S_1$ prikupljen uglavnom iz novinskih članaka, dok se do $S_2$ došlo sabiranjem proznih djela. 
 
-U najjednostavnijem slučaju izrade klasifikatora bi sadržavao:
+Najjednostavniji (generički) slučaj statističkog dokaza izrade klasifikatora zahtjeva: 
 \begin{description}
   \item[istraživačku hipotezu,] \hfill \\
-  Nova metoda $A$ radi bolje od trenutno općeprihvaćene metode $B$. Viši iznos vrijednosti znači da metoda radi bolje.
+  Novi klasifikator $A$ je precizniji od trenutno općeprihvaćenog klasifikatora $B$. Viši iznos vrijednosti znači da klasifikator radi bolje (točnije).
   \item[nultu hipotezu $H_0$,] \hfill \\
-  Ne postoji razlika u performansama između sustava \textit{A} i \textit{B}.
+  Ne postoji razlika u performansama između klasifikatora \textit{A} i \textit{B}.
   \item[skup podataka,] \hfill \\
-  Postoji jedinstven skup podataka \engl{dataset} -- populacija. Moguće je uzimati uzorke $x$ iz populacije.
+  Postoji jedinstven skup podataka $S$ \engl{dataset} -- populacija. Moguće je uzimati uzorke $x$ iz populacije.
   \item[način mjerenja] \hfill \\  
-  $c_A$ je rezultat sustava $A$, $c_B$ je rezultat sustava $B$. $d_{A,B}=c_A-c_B$ je razlika u perfomansama između sustava \textit{A} i \textit{B}.
+  $f_A$ je rezultat klasifikatora $A$, $f_B$ je rezultat klasifikatora $B$. $d_{A,B}=f_A-f_B$ je razlika u perfomansama između klasifikatora \textit{A} i \textit{B}.
 \end{description}
-Provođenje testiranja može se odvijati na čitavoj populaciji, ili se može uzorkovati nad populacijom i ispitivati ponašanje sustava $A$ i $B$ na uzorcima $x$ veličine $n$ iz populacije $X$. U slučaju uzorkovanja, testiranje hipoteze procjenjuje kolika je vjerojatnost:
+Provođenje testiranja može se odvijati na čitavoj populaciji, ili se može uzorkovati nad populacijom i ispitivati ponašanje $A$ i $B$ na uzorcima $x$ veličine $n$ iz populacije $X$. U slučaju uzorkovanja, testiranje hipoteze procjenjuje kolika je vjerojatnost:
 \begin{equation}
 \label{eq:vjerojatnost_nulte_hipoteze}
 p(d_{A,B}(X) > d_{A,B}(x) | H_{0}) < \alpha
@@ -86,5 +86,5 @@ gdje je \textit{X} slučajna varijabla mogućih dobivenih uzoraka veličine \tex
 \item procjenom.
 \end{itemize}
 
-U idućem poglavlju bit će govora o oba načina. Prvo će se pokazati na primjerima često vidljivim u časopisima o strojnom učenju kako je moguće izračunati p-vrijednost s obzirom na različite okolnosti eksperimenta. Na čitatelju ostaje prepoznati uvjete vlastitog istraživanja te se prema tome odlučiti za jedan od ova dva načina.
+U idućem poglavlju bit će govora o oba načina. Prvo će se pokazati na primjerima iz strojnog učenja kako je moguće izračunati p-vrijednost s obzirom na različite okolnosti eksperimenta. Aproksimacija p-vrijednosti koristi se kao alternativa u uvjetima kada nije moguće analitički izračunati p-vrijednost. Na čitatelju ostaje prepoznati uvjete vlastitog istraživanja te se prema tome odlučiti za jedan od ova dva načina.
 
