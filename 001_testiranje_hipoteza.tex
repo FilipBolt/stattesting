@@ -1,4 +1,4 @@
-Testiranje hipoteza dominantan je način verifikacije rezultata prilikom objavljivanja znanstvenih radova. Ronald Fisher, otac moderne statistike, pokazao je kako je moguće rezultate eksperimenta dokazati ili opovrgnuti koristeći statističke postupke \citep{fisher1922mathematical}. Prema Fisherovom testiranju hipoteza moguće je ispitati jesu li rezultati dobiveni eksperimentom statistički značajni, što bi značilo da rezultati nisu dobiveni pukom slučajnošću, već bi se ponovili dok god su uvjeti eksperimenta istovjetni. Razvojem statistike utemeljen je uobičajen način ispitivanja statističke značajnosti prema kojem se:
+Testiranje hipoteza dominantan je način verifikacije rezultata prilikom objavljivanja znanstvenih radova. Ronald Fisher, otac moderne statistike, pokazao je kako je moguće dokazati ili opovrgnuti rezultate eksperimenta koristeći statističke postupke \citep{fisher1922mathematical}. Prema Fisherovom testiranju hipoteza moguće je ispitati jesu li rezultati dobiveni eksperimentom statistički značajni, što bi značilo da rezultati nisu dobiveni pukom slučajnošću, već da ih je moguće reproducirati u istovjetnim uvjetima. Razvojem statistike utemeljen je uobičajen način ispitivanja statističke značajnosti prema kojem se:
 
 \begin{enumerate}
 \item postavlja inicijalna hipoteza istraživanja,
@@ -9,18 +9,15 @@ Testiranje hipoteza dominantan je način verifikacije rezultata prilikom objavlj
 \item računa distribucija odabrane statističke mjere $T$ pod pretpostavkom da je nulta hipoteza zadovoljena (ove vrijednosti često su unaprijed izračunate i pohranjene u tablicama \citep{wilcoxon1973critical})
 \item odabire razina značajnosti $\alpha$ (engl.\,\textit{significance level}), razina vjerojatnosti ispod koje se odbacuje nulta hipoteza (česti odabiri su 1\% ili 5\%, ovisno o eksperimentu),
 \item računaju granične vrijednosti (engl.\,\textit{critical region}) distribucije statističke mjere $T$ za razinu značajnosti $\alpha$,
-\item računa statistička mjera $t_{obs}$ dobivena iz eksperimentalnih (stvarnih) podataka,
-\item donosi odluka o odbacivanju nulte hipoteze ukoliko je dobivena vrijednost $t_{obs}$ unutar graničnih vrijednosti.
+\item računa statistička mjera $T_{obs}$ dobivena iz eksperimentalnih (stvarnih) podataka,
+\item donosi odluka o odbacivanju nulte hipoteze ukoliko je dobivena vrijednost $T_{obs}$ unutar graničnih vrijednosti.
 \end{enumerate}
 
-Moguć je i alternativan scenarij prema kojem se na temelju dobivene $t_{obs}$ vrijednosti računa $p$ vrijednost (engl.\,\textit{p-value}), vjerojatnosti $P(H_0|D)$ dobivenih podataka $D$ pod pretpostavkom nulte hipoteze $H_0$ na temelju koje se donosi odluka o odbacivanju nulte hipoteze. U slučaju kada je $p$-vrijednost manja od postavljene razine statističke značajnosti $\alpha$, nije moguće odbaciti nultu hipotezu zbog nedovoljno dokaza. \textit{P-vrijednost} naziva se i empirijska razina značajnosti. P-vrijednost konzistentno pruža informaciju o vjerojatnosti, dakle ne ovisi o vrstu testa i odabranoj statističkoj mjeri. Iz tog razloga u većini radova interpretacija rezultata statističkog testiranja tumači se putem $p$-vrijednosti. 
+Moguć je i alternativan scenarij prema kojem se na temelju dobivene $T_{obs}$ vrijednosti računa $p$-vrijednost (engl.\,\textit{p-value}), vjerojatnost $P(H_0|D)$ dobivenih podataka $D$ pod pretpostavkom nulte hipoteze $H_0$ na temelju koje se donosi odluka o odbacivanju nulte hipoteze. U slučaju kada je $p$-vrijednost manja od postavljene razine statističke značajnosti $\alpha$, nije moguće odbaciti nultu hipotezu zbog nedovoljno dokaza. $P$-vrijednost naziva se i empirijska razina značajnosti, a ne ovisi o vrstu testa i odabranoj statističkoj mjeri. Iz tog razloga u većini radova interpretacija rezultata statističkog testiranja tumači se putem $p$-vrijednosti. 
 
 Eksperiment kojim je Fisher predstavio testiranje hipotezi je damin test kušanja čaja (engl.\,\textit{lady tasting tea}). Testom se pokušalo ustanoviti može li dama (u Fisherovom slučaju Muriel Bristol) temeljem okusa razlikovati čaj s mlijekom prema načinu spravljanja napitka (prvo čaj, zatim mlijeko ili obratno). U ovom slučaju nulta hipoteza je pretpostavka da dama ne može razlikovati čaj s mlijekom sudeći samo prema okusu. Dami je predstavljeno osam šalica čaja s mlijekom za koje je morala opisati način pripreme. Dobiveni rezultati uspoređuju se s pravim vrijednostima, te se na temelju toga provodi statistička verifikacija rezultata. Eksperiment je detaljno objašnjen u Fisherovom radu \cite{fisher1935design}. Test se smatra izuzetno bitnim za razvoj polja statistike \citep{potter2001lady}.
 
 \section{Vrste pogrešaka}
-
-A type I error (or error of the first kind) is the incorrect rejection of a true null hypothesis. It is a false positive. Usually a type I error leads one to conclude that a supposed effect or relationship exists when in fact it doesn't. Examples of type I errors include a test that shows a patient to have a disease when in fact the patient does not have the disease, or an experiment indicating that a medical treatment should cure a disease when in fact it does not.
-A type II error (or error of the second kind) is the failure to reject a false null hypothesis. It is a false negative. Examples of type II errors would be a blood test failing to detect the disease it was designed to detect, in a patient who really has the disease; or a clinical trial of a medical treatment failing to show that the treatment works when really it does
 
 Prilikom provođenja statističkog testa, na temelju dobivenih statističkih mjera ili $p$-vrijednosti, donosi se odluka o prihvaćanju ili odbacivanju nulte hipoteze. Sama odluka može biti pogrešna i to na dva načina:
 \begin{itemize}
@@ -28,11 +25,11 @@ Prilikom provođenja statističkog testa, na temelju dobivenih statističkih mje
 \item je donesena odluka kojom se ne odbacuje pogrešna nulta hipoteza -- pogreška tipa II \engl{type II error}.
 \end{itemize}
 
-Pogreška tipa I pogrešno zaključuje da je zadovoljena pretpostavka koja se eksperimentom htjela statistički dokazati. Pogrešna tipa II odbacuje istinitu pretpostavku. Primjerice, konstruirana su dva klasifikatora $A$ i $B$. Nulta hipoteza pretpostavlja kako su njihove performanse jednake. Pogreška tipa I bi se dogodila u slučaju da prihvatimo da je $A$ bolji od $B$, a da u stvarnosti rade jednako dobro. Kada bi uistinu $A$ radio bolje od $B$, a takva teza bi se odbacila statističkim testom, to znači kako je došlo do pogreške tipa II. Pogreške tipa I i II su osnovne statističke pogreške. Postoje dodatna proširenja ovih osnovnih pogrešaka, a često ovise o području primjene (medicina, računalna sigurnost, telekomunikacije \dots)
+Pogreška tipa I pogrešno zaključuje da je zadovoljena pretpostavka koja se eksperimentom htjela statistički dokazati. Pogrešna tipa II odbacuje istinitu pretpostavku. Primjerice, konstruirana su dva klasifikatora $C_A$ i $C_B$. Nulta hipoteza pretpostavlja kako su njihove performanse jednake. Pogreška tipa I bi se dogodila u slučaju da prihvatimo da je $C_A$ bolji od $C_B$, a da u stvarnosti rade jednako dobro. Kada bi uistinu $C_A$ radio bolje od $C_B$, a takva teza bi se odbacila statističkim testom, to znači kako je došlo do pogreške tipa II. Pogreške tipa I i II su osnovne statističke pogreške. Postoje dodatna proširenja ovih osnovnih pogrešaka, a često ovise o području primjene (medicina, računalna sigurnost, telekomunikacije \dots).
 
 \section{Kritike testiranja hipoteza}
 \label{sec:critique}
-Testiranje hipoteza primjenjuje se u gotovo svim znanstvenim disciplinama. No, postupak dokazivanja statističke značajnosti je kontroverzan i podložan brojnim kritikama. Objavljen je izuzetno velik broj radova koji kritiziraju provedbe sumnjivih statističkih postupaka, kao što su \citep{hedges1985statistical}, \citep{dar1994misuse}, \citep{yoccoz1991use}. Najprodavanija knjiga iz statistike \textit{How to lie with statistics} \citep{huff2010lie} pokušava na način pristupačan široj publici pokazati na koji je način moguće slučajno ili namjerno iskoristiti statistiku na pogrešan način. Razlozi pogrešnog provođenja statističkog testa su pogrešno tumačenje ili preskakanje jednog od koraka navedenih na početku poglavlja.
+Testiranje hipoteza primjenjuje se u gotovo svim znanstvenim disciplinama. No, postupak dokazivanja statističke značajnosti je podložan brojnim kritikama. Objavljen je izuzetno velik broj radova koji kritiziraju provedbe sumnjivih statističkih postupaka, kao što su \citep{hedges1985statistical}, \citep{dar1994misuse}, \citep{yoccoz1991use}. Najprodavanija knjiga iz statistike \textit{How to lie with statistics} \citep{huff2010lie} pokušava, na način pristupačan široj publici, demonstrirati na koji je način moguće slučajno ili namjerno iskoristiti moć statističkog zaključivanja na pogrešan način. Razlozi pogrešnog provođenja statističkog testa su pogrešno tumačenje ili preskakanje jednog od koraka navedenih na početku poglavlja.
 
 Bruce Thompson \citep{thompson1993use} navodi neke kritike konvencionalnih metoda statističkog testiranja:
 
@@ -42,11 +39,8 @@ Bruce Thompson \citep{thompson1993use} navodi neke kritike konvencionalnih metod
 Ispitivanje statističke značajnosti može biti vođeno tautologijom. Umorni istraživači, nakon prikupljanja skupa podataka, rade statističke testove kako bi se uvjerili da je prikupljena dovoljno velika količina podataka, što je podatak koji već znaju. Ovakva tautologija učinila je mnogo štete znanstvenoj zajednici.
 \end{quote}
 
-2. Korištenje ANOVA-e može dovesti do pogrešnih usporedbi. U višedimenzionalnim analizama primjenom hijerarhijskog pristupa moguće je povlačiti usporedbe između podataka iz različitih dimenzija, analogno poslovici: usporedba krušaka i jabuka. 
+2. Korištenje analize varijance \engl{analysis of variance -- ANOVA} može dovesti do pogrešnih usporedbi. U višedimenzionalnim analizama primjenom hijerarhijskog pristupa moguće je povlačiti usporedbe između podataka iz različitih dimenzija, analogno poslovici: usporedba krušaka i jabuka. 
 
-3. Oslanjanje na ispitivanje statističke značajnosti stvara neizbježne dvojbe. \\  ANOVA zahtjeva spajanje varijanci prilikom izračuna srednje devijacije (u nazivniku). Ova operacija je dozvoljena samo u slučaju da su varijable homogene, međusobno usporedive. Slično tome, ANCOVA (analiza kovarijance) pretpostavlja da je zadovoljen uvjet \textit{homogenosti regresije} \engl{Homogeneity of Regression Slopes}. 
-
-
-
+3. ANOVA zahtjeva spajanje varijanci prilikom izračuna srednje devijacije (u nazivniku). Ova operacija je dozvoljena samo u slučaju da su varijable homogene, međusobno usporedive. Slično tome, analiza kovarijance \engl{analysis of covariance -- ANCOVA} pretpostavlja da je zadovoljen uvjet \textit{homogenosti regresije} \engl{Homogeneity of Regression Slopes}. Ovo su preduvjeti koje brojni istraživači ne provjeravaju \citep{thompson1993use}.
 
 

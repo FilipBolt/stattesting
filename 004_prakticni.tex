@@ -1,0 +1,133 @@
+O ovom poglavlju predstavit će se praktični dio rada. Napravljena su ispitivanja razlike performansi dvaju algoritama učenja. Cilj praktičnog dijela je pokazati različite rezultate različitih testova.
+
+\section{Opis eksperimenta}
+
+Algoritmi \textit{random forest, RF} \citep{breiman2001random} i K-najbližih susjeda \engl{k nearest neighbours, kNN} \citep{fukunaga1975branch} korišteni su prilikom konstrukcije klasifikatora za prepoznavanje rukom pisanih znamenki. Skup podataka dobiven je iz \textit{Kaggle}\footnote{Stranica na kojoj se održavaju natjecanja u izradi klasifikatora.} baze podataka\footnote{Više na stranici \url{http://yann.lecun.com/exdb/mnist/index.html}.}. Radi se o stvarnom skupu podataka. 
+Testiranje se odvijalo pomoću programskog jezika \textit{R} u razvojnom okruženju \textit{RStudio}\footnote{Alat besplatno dostupan na \url{http://www.rstudio.com/}.}. Zbog efikasnosti algoritama u svim eksperimentima se koristio podskup podataka, točnije 2000 jedinki.
+
+Prema informacijama sa izvorne stranice skupa podataka dobiveni podatci su prikupljeni iz više izvora, ali podatci odabrani u eksperimentu pripadaju su prikupljeni iz istih izvora. S obzirom da se koristi podskup od 2000 jedinki od mogućih 60000, korišteni skup podataka je mali. Dakle, eksperimenti se odvijaju nad malim, homogenim skupom podataka. Razina značajnosti u svim eksperimentima je postavljena na fiksnu vrijednost $\alpha=0.05$. 
+
+Primjeri rezultata provođenja algoritama random forest i K-najbližih susjeda vidljivi su u tablici \ref{tab:perfomance_example}. Rezultati su iskazani u preciznosti.
+\begin{center}
+
+\begin{table}
+\small
+\centering
+\begin{tabular}{|c|c|}
+\hline
+Random Forest & K-najbližih susjeda \\ \hline
+0.886 & 0.832 \\ \hline
+0.867 & 0.8425 \\ \hline
+0.8835 & 0.8445 \\ \hline
+0.8805 & 0.8515 \\ \hline
+0.871 & 0.845 \\ \hline
+\end{tabular}
+\caption{Primjeri preciznosti algoritama učenja Random Forest i K-najbližih susjeda na skupu podataka rukom pisanih znamenki}
+\label{tab:perfomance_example}
+\end{table}
+\end{center}
+
+\section{McNemarov test}
+
+Za McNemarov test potrebno je izračunati jedan oblik tablice kontigencije nakon provođenja treniranja i testiranja algoritama. Prema formuli, računa se $t_{obs}$ statistika koja bi, prema nultoj hipotezi, trebala imati $\chi^2$ distribuciju s jednim stupnjem slobode. $R$ kod za McNemarov test prikazan je algoritmom \ref{alg:mcnemar}.
+
+\begin{algorithm}
+\lstinputlisting{./mcnemar.R}
+\caption{R kod za McNemarov test}
+\label{alg:mcnemar}
+\end{algorithm}
+
+\section{Test razlika}
+
+Test razlika modeliran je prema binomnoj, odnosno normalnoj distribuciji. Također koristi vrijednosti tablica kontigencije, ali samo za izračun parametara vjerojatnosti pogreške. 
+Implementacija testa razlika prikazana je programskim kodom u algoritmu \ref{alg:testrazlika}.
+
+\begin{algorithm}
+\lstinputlisting{./testrazlika.R}
+\caption{R kod za Test razlika}
+\label{alg:testrazlika}
+\end{algorithm}
+
+\section{T-test s resempliranjem}
+
+T-test s resempliranjem je najčešće korišteni test. Njegova velika razlika u odnosu na prethodne testove je što ne temelji rezultate na jednom rezultatu. Umjesto toga, t-test s resempliranjem nastoji promatrati razlike u performansama nad više uzoraka. Algoritam 
+\ref{alg:ttestresempliranje} prikazuje korišteni upareni t-test. 
+
+\begin{algorithm}
+\lstinputlisting{./pairedttest.R}
+\caption{R kod za t-test s resempliranjem}
+\label{alg:ttestresempliranje}
+\end{algorithm}
+
+\section{Upareni t-test s $k$-strukom unakrsnom validacijom}
+
+Prethodno korišteni t-test se nije brinuo za korelaciju između uzoraka, što upareni t-test s $k$-strukom unakrsnom validacijom nastoji donekle ispraviti podjelom u disjunktne trening i testne skupove. Implementacija testa prikazana je algoritmom \ref{alg:crossval}. Odabran je broj 10 za $k$, broj preklopnih slojeva \engl{fold}.
+
+\begin{algorithm}
+\lstinputlisting{./crossval.R}
+\caption{R kod za upareni t-test s $k$-strukom unakrsnom validacijom}
+\label{alg:crossval}
+\end{algorithm}
+
+\section{5xcv upareni t-test}
+
+Dodatno smanjenje korelacije između skupova za treniranje i testiranje donosi 5xcv upareni t-test, prikazan algoritmom \ref{alg:5xcv}. Ovdje je testiranje provedeno eksplicitno, umjesto putem funkcije, zbog formata dobivenih podataka. Preskočeni su dijelovi programa gdje se radi treniranje i testiranje nad podatcima, zbog preglednosti. Ti dijelovi napravljeni su na sukladan način kao i u ostalim prikazanim algoritmima.
+
+\begin{algorithm}
+\lstinputlisting{./5xcv.R}
+\caption{R kod za 5xCV upareni t-test}
+\label{alg:5xcv}
+\end{algorithm}
+
+\section{Boostrap}
+
+Alternativa klasičnom načinu testiranja prikazana je algoritmom \textit{boostrap} čija implementacija je vidljiva u algoritmu \ref{alg:boostrap}. Ovdje smo pretpostavili (iz dosadašnjih ispitivanja) kako je očekivana razlika u preciznosti dva algoritma 0.1, što smo postavili kao apriornu vrijednosti razlike. 
+
+\begin{algorithm}[h]
+\lstinputlisting{./bootstrap.R}
+\caption{R kod boostrap algoritam}
+\label{alg:boostrap}
+\end{algorithm}
+
+\section{Ispitivanje različitih testova značajnosti}
+
+
+\begin{center}
+\begin{table}
+\small
+\begin{tabular}{|p{1.8cm}|p{1.6cm}|p{1.8cm}|p{1.6cm}|p{1.8cm}|p{2.2cm}|p{1.5cm}|}
+\hline
+& McNemar & Test razlika & T-test (resempl). & T-test $k$-struka valid. & 5xcv upareni t-test & Bootstrap \\
+\hline
+McNemar &  & 38 & 41 & 45 & 33 & 45 \\ \hline
+Test razlika &  &  & 33 & 31 & 31 & 33 \\ \hline
+T-test (resempl.) &  &  &  & 46 & 34 & 50 \\ \hline
+T-test $k$-struka valid. &  &  &  &  & 32 & 46 \\ \hline
+5xcv upareni t-test &  &  &  &  &  & 34 \\ \hline
+
+\hline
+\end{tabular}
+\caption{Matrica podudaranja rezultata testiranja}
+\label{tab:agreement_rt}
+\end{table}
+\end{center}
+
+U prethodnim odjeljcima opisani su različiti načini ispitivanja statističke značajnosti. Konačan korak je usporedba rezultata testiranja između svih 6 navedenih metoda. Tablica \ref{tab:agreement_rt} prikazuje matricu podudaranja testiranja različitih metoda na istom skupu podataka. Izvorni skup podataka u svim eksperimentima je bio isti. Matrica pokazuje koliko su korelirani rezultati različitih statističkih testova. Testovi su ponovljeni 50 puta. Broj $x$ u retku $i$ i stupcu $j$ znači da se metode $i$ i $j$ $x$ puta slažu oko zaključka testiranja (maksimalan broj slaganja je 50). Ishod testiranja može biti jedino prihvaćanje ili odbacivanje nulte hipoteze. 
+
+\begin{center}
+\begin{table}
+\small
+\begin{tabular}{|p{1.6cm}|p{2cm}|p{2.8cm}|p{3.3cm}|p{2.2cm}|p{1.5cm}|}
+\hline
+McNemar & Test razlika & T-test (resempl). & T-test $k$-struka valid. & 5xcv upareni t-test & Bootstrap \\ \hline
+100 & 66 & 100 & 92 & 68 & 100 \\
+\hline
+\end{tabular}
+\caption{Tablica jačine testova -- koliko puta (\%) je nulta hipoteza odbačena }
+\label{tab:reject_sum}
+\end{table}
+\end{center}
+
+
+Tablicom \ref{tab:reject_sum} se može vidjeti u kolikoj mjeri je test odbacio nultu hipotezu. Prema tablici vidimo da su McNemarov, T-test s resempliranjem i Bootstrap test najviše puta odbacili nultu hipotezu. Bootstrap test uvelike ovisi o \textit{apriori} vrijednosti te je moguće kako je broj ponavljanja testa bio premali kako bi se dobili kvalitetni rezultati. McNemarov test pokazao se, po dobivenoj jačini, sličnim T-testu, što je suprotno početnom očekivanju, jer McNemarov test uzima samo jedan nasumični uzorak. Preporučeni 5xcv se pokazao relativno slabim u ovom slučaju. Općenito, rezultati pokazuju relativno visoku varijancu, što upućuje da je odabir statističkog testa iznimno bitna stavka prilikom ispitivanja statističke značajnosti rezultata.
+

@@ -1,16 +1,23 @@
-Ispitivanje statističke značajnosti rezultata često se obavlja u kontekstu strojnog učenja. Izrada novih tehnika i metoda strojnog učenja zahtjeva dokaz i statističku analizu o performansama sustava. 
+Ispitivanje statističke značajnosti rezultata često se obavlja u kontekstu strojnog učenja. Izrada novih tehnika i metoda strojnog učenja zahtjeva statističku analizu i dokazivanje. 
 
 \begin{table}
 \centering
 \begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|}
 \hline
-Riječ & lopata & život & ja & ljudi & cvijet & ili & svijet & klasifikacija & ritam & latica \\ \hline
+Riječ & lopata & život & ja & ljudi & cvijet & ili & svijet & aha & ritam & latica \\ \hline
 Ispravno & T & F & F & T & F & F & T & T & T & F \\ \hline
 Dobiveno & T & T & T & F & F & F & T & T & T & T \\ \hline
 \end{tabular}
 \caption{Rezultat klasifikatora}
 \label{tab:usporedba_predict_gold}
 \end{table}
+
+\section{Algoritmi učenja u strojnom učenju}
+
+U ovom odjeljku objasnit ćemo pojmove vezane za strojno učenje korištene u ostatku rada. Postoji mnogo referenci za upoznavanje s područjem strojnog učenja, kao što su \citep{anderson1986machine} i \citep{bishop2006pattern}. Kako se strojno učenje primjenjuje u sve više raznovrsnih područja, tako postoji i literatura za upoznavanje sa strojnim učenjem, kao što je \citep{baldi2001bioinformatics}. 
+
+Algoritmima učenja izgrađujemo klasifikatore, kojima automatski kategoriziramo stvari: klasifikacija novčanica u aparatima za kavu, klasifikacija otiska prstiju, prepoznavanje prometnih znakova \dots
+Razlika između algoritma učenja i klasifikatora je u tome što je klasifikator istrenirani proizvod bez mogućnosti daljnjih modifikacija ponašanja. Algoritam učenja može proizvesti jedan ili više klasfikatora. Ponekad se uspoređuju algoritmi učenja, a ponekad klasifikatori, ovisno o primjeni. Primjerice, potrebno je izgraditi stroj za automatsko prepoznavanje vrsta riječi u obradi prirodnog teksta: moguće je pokušati uporabiti različite algoritme učenja za dobivanje klasifikatora. Moguće je uspoređivati rezultate algoritama učenja, ali i samih klasifikatora. U kontekstu učenja kod čovjeka, moguće je uspoređivati tehnike učenja, primjerice tzv.\,kampanjski način učenja s redovitim učenjem, što bi odgovaralo usporedbi algoritama učenja. Uspoređivanje rezultata studenata na ispitima odgovara usporedbi klasifikatora.
 
 \section{Mjerenje performansi modela strojnog učenja}
 
@@ -62,29 +69,29 @@ U praksi, koriste se i mnoga druga mjerila izvedbe klasifikatora, mnoga opisana 
 
 \section{Metodologija ispitivanja značajnosti}
 
-Potraga za novim, optimalnim algoritmom učenja za zadatak strojnog učenja često uključuje izgradnju više modela s različitim algoritmima i promatranje ponašanja tih modela nad različitim skupovima podataka. Ciljevi takvih istraživanja mogu biti: kako konstruirati klasifikator koji u prosjeku radi vrlo dobro nad svim dostupnim skupovima podataka, koji klasifikator pruža najbolje rezultate nad malim (specifičnim) skupovima podataka, kada koristiti kombinaciju algoritam učenja, a kada klasifikator i sl. Ukoliko se radi o novom zadatku, ne postoji referentni sustav s kojim bi se novoizgrađeni sustav mogao usporediti. U slučaju napadanja poznatog, donekle rješenog problema potrebno je usporediti perfomanse novodobivenih postupaka s trenutno najboljim. Također, moguće je pretpostaviti da je na raspolaganju jedan ili više skupova podataka. Ti skupovi podataka možda dolaze iz različite domene. Na primjer, izdvajanje ključnih riječi iz skupova podataka $S_1$ i $S_2$, gdje je $S_1$ prikupljen uglavnom iz novinskih članaka, dok se do $S_2$ došlo sabiranjem proznih djela. 
+Potraga za novim, optimalnim algoritmom učenja za zadatak strojnog učenja često uključuje izgradnju više modela s različitim algoritmima i promatranje ponašanja tih modela nad različitim skupovima podataka. Ciljevi takvih istraživanja mogu biti: kako konstruirati klasifikator koji u prosjeku radi vrlo dobro nad svim dostupnim skupovima podataka, koji klasifikator pruža najbolje rezultate nad malim (specifičnim) skupovima podataka, kada koristiti algoritme učenja, a kada klasifikator i sl. Ukoliko se radi o novom zadatku, ne postoji referentni sustav s kojim bi se novoizgrađeni sustav mogao usporediti. U slučaju napadanja poznatog, donekle rješenog problema potrebno je usporediti perfomanse novodobivenih postupaka s trenutno najboljim. Također, moguće je pretpostaviti da je na raspolaganju jedan ili više skupova podataka. Ti skupovi podataka možda dolaze iz različite domene. Na primjer, izdvajanje ključnih riječi iz skupova podataka $S_1$ i $S_2$, gdje je $S_1$ prikupljen uglavnom iz novinskih članaka, dok se do $S_2$ došlo sabiranjem proznih djela. 
 
 Najjednostavniji (generički) slučaj statističkog dokaza izrade klasifikatora zahtjeva: 
 \begin{description}
   \item[istraživačku hipotezu,] \hfill \\
-  Novi klasifikator $A$ je precizniji od trenutno općeprihvaćenog klasifikatora $B$. Viši iznos vrijednosti znači da klasifikator radi bolje (točnije).
+  Novi klasifikator $C_A$ je precizniji od trenutno općeprihvaćenog klasifikatora $C_B$. Viši iznos vrijednosti znači da klasifikator radi bolje (točnije).
   \item[nultu hipotezu $H_0$,] \hfill \\
   Ne postoji razlika u performansama između klasifikatora \textit{A} i \textit{B}.
   \item[skup podataka,] \hfill \\
   Postoji jedinstven skup podataka $S$ \engl{dataset} -- populacija. Moguće je uzimati uzorke $x$ iz populacije.
   \item[način mjerenja] \hfill \\  
-  $f_A$ je rezultat klasifikatora $A$, $f_B$ je rezultat klasifikatora $B$. $d_{A,B}=f_A-f_B$ je razlika u perfomansama između klasifikatora \textit{A} i \textit{B}.
+  $f_A$ je rezultat klasifikatora $C_A$, $f_B$ je rezultat klasifikatora $C_B$. $d_{A,B}=f_A-f_B$ je razlika u perfomansama između klasifikatora $C_A$ i $C_B$
 \end{description}
-Provođenje testiranja može se odvijati na čitavoj populaciji, ili se može uzorkovati nad populacijom i ispitivati ponašanje $A$ i $B$ na uzorcima $x$ veličine $n$ iz populacije $X$. U slučaju uzorkovanja, testiranje hipoteze procjenjuje kolika je vjerojatnost:
+Provođenje testiranja može se odvijati na čitavoj populaciji, ili se može uzorkovati nad populacijom i ispitivati ponašanje $C_A$ i $C_B$ na uzorcima $x$ veličine $n$ iz populacije $S$. U slučaju uzorkovanja, testiranje hipoteze procjenjuje kolika je vjerojatnost:
 \begin{equation}
 \label{eq:vjerojatnost_nulte_hipoteze}
-p(d_{A,B}(X) > d_{A,B}(x) | H_{0}) < \alpha
+p(d_{C_A,C_B}(X) > d_{C_A,C_B}(x) | H_{0}) < \alpha
 \end{equation}
-gdje je \textit{X} slučajna varijabla mogućih dobivenih uzoraka veličine \textit{n}, a $d_{A,B}(x)$ promatrana (konstantna) vrijednost. Ako vrijedi \ref{eq:vjerojatnost_nulte_hipoteze} za odabranu vrijednost $\alpha$ (najčešće $0.05$) onda se odbacuje nulta hipoteza. Dva su osnovna načina izračuna p-vrijednosti:
+gdje je \textit{X} slučajna varijabla mogućih dobivenih uzoraka veličine \textit{n}, a $d_{C_A,C_B}(x)$ promatrana (konstantna) vrijednost. Ako vrijedi \ref{eq:vjerojatnost_nulte_hipoteze} za odabranu vrijednost $\alpha$ (najčešće $0.05$) onda se odbacuje nulta hipoteza. Dva su osnovna načina izračuna $p$-vrijednosti:
 \begin{itemize}
 \item izravnim izračunom,
 \item procjenom.
 \end{itemize}
 
-U idućem poglavlju bit će govora o oba načina. Prvo će se pokazati na primjerima iz strojnog učenja kako je moguće izračunati p-vrijednost s obzirom na različite okolnosti eksperimenta. Aproksimacija p-vrijednosti koristi se kao alternativa u uvjetima kada nije moguće analitički izračunati p-vrijednost. Na čitatelju ostaje prepoznati uvjete vlastitog istraživanja te se prema tome odlučiti za jedan od ova dva načina.
+U idućem poglavlju bit će govora o oba načina. Prvo će se pokazati na primjerima iz strojnog učenja kako je moguće izračunati $p$-vrijednost s obzirom na različite okolnosti eksperimenta. Aproksimacija $p$-vrijednosti koristi se kao alternativa u uvjetima kada nije moguće analitički izračunati $p$-vrijednost. Na čitatelju ostaje prepoznati uvjete vlastitog istraživanja te se prema tome odlučiti za jedan od ova dva načina.
 

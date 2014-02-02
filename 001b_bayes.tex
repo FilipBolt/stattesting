@@ -1,0 +1,26 @@
+Testiranje hipoteza opisano u poglavlju \ref{chap:test_hipoteza} naziva se frekvencijski pristup testiranju. Takav način testiranja uvijek uključuje postavljanje dvije oprečne hipoteze $H_0$ i $H_1$ i ispitivanje testne statistike, često putem $p$-vrijednosti ili intervala pouzdanosti. Frekvencijski pristup testiranju daje zaključke o eksperimentu koji su valjani ukoliko se razmatra iznimno velik broj ponavljanja eksperimenta. Bayesovim pristupom pokušava se kompenzirati nemogućnost višestrukog ponavljanja eksperimenta, već se, prilikom izračuna statističke značajnosti, uzimaju u obzir prethodno stečena znanja poznata prije odvijanja eksperimenta (\textit{apriori} znanja). U pojedinim situacijama moguće je primjeniti samo Bayesov način testiranja, jer nije moguće ponoviti eksperiment više od jednom. Primjerice, donošenje sudskih odluka moguće je samo na temelju dokaza dostupnih za jedan, konkretni slučaj. 
+
+Bayesov pristup testiranju alternativa je frekvencijskom pristupu testiranja. U Bayesovu slučaju moguće je razmatrati više od dvije hipoteze. Temelji se na dobro poznatom Bayesovom teoremu \citep{pawlak2002rough} u kojem modeliramo svijet temeljem \textit{a priori} i \textit{a posteriori} vjerojatnosti. Primjerice, potrebno je provjeriti ispravnost hipoteza $H_1$ i $H_2$, na temelju dobivenih podataka $x$. Potrebno je izračunati \textit{posteriori} vjerojatnosti $P(H_1|x)$ i $P(H_2|x)$ pomoću Bayesove formule:
+
+\begin{center}
+\begin{equation}
+P(H_1|x) = \frac{P(x|H_1)P(H_1)}{P(x)}
+\end{equation}
+\begin{equation}
+P(H_2|x) = 1 - P(H_1|x)
+\end{equation}
+\end{center}
+
+A priori vjerojatnost dobivenih podataka $P(x)$ je vjerojatnost podataka prema svim pretpostavljenim hipotezama (ovdje $H_1$ i $H_2$):
+\begin{center}
+\begin{equation}
+P(x) = \sum_i P(x|H_i)P(H_i)
+\end{equation}
+\end{center}
+
+Prednost Bayesovog načina testiranja je mogućnost dodavanja vlastitih pretpostavki o eksperimentu prije obavljanja testiranja. Temeljem zdravog razuma, prethodnog iskustva ili predrasuda moguće je definirati a priori vjerojatnosti ishoda eksperimenta. Primjerice, želimo li ispitivati je li osoba duge kosa muškog ili ženskog spola, vjerojatno ćemo postaviti visoku a priori vjerojatnost temeljem stvarnog iskustva. Takve procjene nije uvijek lako donositi, što je jedna često raspravljana tema u okviru Bayesovog pristupa testiranju \citep{gelman2012philosophy}. Također, moguće je provoditi ispitivanje statističke značajnosti na Bayesov način koristeći Bayesov faktor \engl{Bayes factor}, omjer vjerojatnosti hipoteza temeljem podataka:
+\begin{equation}
+\frac{P(x|H_1)}{P(x|H_2)}
+\end{equation}
+
+Frekvencijsko testiranje se najčešće koristi prilikom statističkog ispitivanja značajnosti, zbog lakoće aproksimacija procesa frekvencijskim vjerojatnostima. Korištenje Bayesovog načina testiranja zahtjeva procjenjivanje parametara, što je, do napretka dobivenih \textit{Monte Carlo, MC} \citep{hammersley1965monte} metodama, bilo izuzetno matematički zahtjevno. Kombinacijom današnje računalne snage i MC metoda moguće je promatrati ispitivanje statističke značajnosti na Bayesov način, te se smatra kako će ovakav način testiranja postati dominantan u literaturi kroz nekoliko godina \citep{gelman2012philosophy}. 
